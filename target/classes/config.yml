@@ -1,0 +1,8 @@
+lobbylength: 20
+gamelength: 300
+palletes:
+-  genelectrovise:
+   - DIAMOND_BLOCK
+   - JUKEBOX
+   - CARVED_PUMPKIN
+   - GOLD_ORE
