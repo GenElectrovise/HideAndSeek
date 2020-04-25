@@ -26,17 +26,17 @@ public class Game {
 	public boolean canJoin = false;
 	private Logger logger;
 	public static ArrayList<Player> playersInAllGames = new ArrayList<Player>();
-	private BlockPallete pallete;
+	private BlockPalette palette;
 
 	public static final ItemStack BOW = new ItemStack(Material.BOW);
 	public static final ItemStack ARROWS = new ItemStack(Material.ARROW, 64);
 	public static final ItemStack DISGUISE = new ItemStack(Material.CARVED_PUMPKIN);
 	public static final ItemStack UNDISGUISE = new ItemStack(Material.BARRIER);
 
-	public Game(Logger logger, ThreeDCoordinate origin, String palleteName) {
+	public Game(Logger logger, ThreeDCoordinate origin, String paletteName) {
 		this.logger = logger;
 		this.origin = origin;
-		this.pallete = new BlockPallete(Reference.getConfighandler().getBlockPallete(palleteName));
+		this.palette = new BlockPalette(Reference.getConfighandler().getBlockPalette(paletteName));
 	}
 
 	/**
@@ -331,7 +331,7 @@ public class Game {
 		return builder.toString();
 	}
 
-	public BlockPallete getPallete() {
-		return pallete;
+	public BlockPalette getPalette() {
+		return palette;
 	}
 }

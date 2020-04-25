@@ -12,7 +12,7 @@ commands:
       permission-message: You don't have the hideandseek.hnstest permission.
    newgame:
       description: Creates a new HideAndSeek Game at the given coords
-      usage: newgame X Y Z PALLETE
+      usage: newgame X Y Z PALETTE
       permission: hideandseek.newgame
       permission-message: You don't have the hideandseek.newgame permission.
    join:

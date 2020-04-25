@@ -1,6 +1,6 @@
 lobbylength: 20
 gamelength: 300
-palletes:
+palettes:
 -  genelectrovise:
    - DIAMOND_BLOCK
    - JUKEBOX

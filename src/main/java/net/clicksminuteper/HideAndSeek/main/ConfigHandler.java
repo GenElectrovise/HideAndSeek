@@ -11,7 +11,7 @@ public class ConfigHandler {
 		this.config = config;
 	}
 
-	public List<String> getBlockPallete(String name) {
+	public List<String> getBlockPalette(String name) {
 		return config.getStringList("palettes." + name);
 	}
 	
