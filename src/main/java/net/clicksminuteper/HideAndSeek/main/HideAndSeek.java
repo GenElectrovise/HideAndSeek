@@ -14,6 +14,7 @@ import net.clicksminuteper.HideAndSeek.main.enable.EnableHandler;
 import net.clicksminuteper.HideAndSeek.main.game.ItemDisguiseListener;
 import net.clicksminuteper.HideAndSeek.main.game.ItemUndisguiseListener;
 import net.clicksminuteper.HideAndSeek.main.game.PlayerDeathListener;
+import net.clicksminuteper.HideAndSeek.main.game.PlayerMovementListener;
 
 public final class HideAndSeek extends JavaPlugin {
 	private EnableHandler enablehandler;
@@ -50,6 +51,8 @@ public final class HideAndSeek extends JavaPlugin {
 		Bukkit.getPluginManager().registerEvents(itemUndisguiseListener, this);
 		Listener playerDeathListener = new PlayerDeathListener();
 		Bukkit.getPluginManager().registerEvents(playerDeathListener, this);
+		Listener playerMovementListener = new PlayerMovementListener();
+		Bukkit.getPluginManager().registerEvents(playerMovementListener, this);
 		
 		saveDefaultConfig();
 	}

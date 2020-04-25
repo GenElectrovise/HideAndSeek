@@ -1,12 +1,18 @@
 package net.clicksminuteper.HideAndSeek.main.game;
 
+import org.bukkit.Bukkit;
+import org.bukkit.Material;
 import org.bukkit.attribute.Attribute;
+import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageEvent;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 
 import net.clicksminuteper.HideAndSeek.main.Reference;
+import net.clicksminuteper.HideAndSeek.main.disguise.LibsInterface;
 
 public class PlayerDeathListener implements Listener {
 
@@ -41,6 +47,25 @@ public class PlayerDeathListener implements Listener {
 					Reference.getLogger().info("Player is now a seeker");
 					player.setHealth(player.getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue());
 					Reference.getLogger().info("Reset their health to max");
+
+					LibsInterface.cmdUndisguise(Reference.getLogger(), player);
+					
+					Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "tp " + player.getName() + " "
+							+ nearestGame.origin.x + " " + nearestGame.origin.y + " " + nearestGame.origin.z);
+					player.sendMessage("You are a seeker! Have some seeker items!");
+
+					player.getInventory().clear();
+
+					// give diamond sword
+					ItemStack DIAMOND_SWORD = new ItemStack(Material.DIAMOND_SWORD);
+
+					DIAMOND_SWORD.addEnchantment(Enchantment.DAMAGE_ALL, 2);
+					DIAMOND_SWORD.addEnchantment(Enchantment.VANISHING_CURSE, 1);
+
+					ItemMeta sword_meta = DIAMOND_SWORD.getItemMeta();
+					sword_meta.setDisplayName("Hider Remover");
+
+					player.getInventory().addItem(DIAMOND_SWORD);
 				}
 			}
 		}

@@ -28,15 +28,14 @@ public class ItemDisguiseListener implements Listener {
 
 				Game nearestGame = Game.nearestGame(new ThreeDCoordinate(player.getLocation().getX(),
 						player.getLocation().getY(), (player.getLocation().getZ())));
-				
+
 				BlockPalette palette = nearestGame.getPalette();
 
-				Reference.getLogger().info(nearestGame.getPalette().toString());
+				Reference.getLogger().info(palette.toString());
 
-				String block = palette.getBlocks().get(new Random().nextInt(palette.getBlocks().size() - 1));
+				Random random = new Random();
 
-				Reference.getLogger()
-						.info("Heard right click! Player was holding a CARVED_PUMPKIN, so will disguise them randomly");
+				String block = palette.getBlocks().get(random.nextInt(palette.getBlocks().size() - 1));
 
 				LibsInterface.cmdDisguise(Reference.getLogger(), player, block);
 			}

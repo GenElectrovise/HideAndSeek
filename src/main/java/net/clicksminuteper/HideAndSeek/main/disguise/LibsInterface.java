@@ -22,4 +22,10 @@ public class LibsInterface {
 		logger.info(out);
 		return out;
 	}
+
+	public static boolean cmdUndisguise(Logger logger, CommandSender sender) {
+		logger.info("ARGS == " + sender.getName());
+
+		return Bukkit.dispatchCommand(sender, "undisguiseplayer " + sender.getName());
+	}
 }

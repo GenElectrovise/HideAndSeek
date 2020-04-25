@@ -33,10 +33,10 @@ public class Game {
 	public static final ItemStack DISGUISE = new ItemStack(Material.CARVED_PUMPKIN);
 	public static final ItemStack UNDISGUISE = new ItemStack(Material.BARRIER);
 
-	public Game(Logger logger, ThreeDCoordinate origin, String paletteName) {
+	public Game(Logger logger, ThreeDCoordinate origin, BlockPalette palette) {
 		this.logger = logger;
 		this.origin = origin;
-		this.palette = new BlockPalette(Reference.getConfighandler().getBlockPalette(paletteName));
+		this.palette = palette;
 	}
 
 	/**
@@ -68,6 +68,7 @@ public class Game {
 	 * @return The entered Game
 	 */
 	public static Game newGame(Game game) {
+		Reference.getLogger().info("Creating new Game at: " + game.origin + " With palette:" + game.getPalette());
 		return activeGames.put(game.origin, game);
 	}
 
@@ -122,6 +123,7 @@ public class Game {
 		ArrayList<PlayerData> playersDataList = new ArrayList<PlayerData>();
 		for (PlayerData data : players.values()) {
 			playersDataList.add(data);
+			data.getHost().getInventory().clear();
 		}
 
 		try {
@@ -170,7 +172,14 @@ public class Game {
 			String cmd = "tp " + player.getName() + " " + origin.x + " " + origin.y + " " + origin.z;
 			logger.info("cmd : " + cmd);
 
-			logger.info(data.getHost().getDisplayName() + " is a seeker!");
+			if (data.isSeeker()) {
+				data.getHost().sendMessage("You are a seeker!");
+				logger.info(data.getHost().getDisplayName() + " is seeker!");
+			} else {
+				data.getHost().sendMessage(
+						"You are a hider! Use the your pumpkin- Uh... I mean Disguise-a-tron 3000 to diguise yourself!");
+				logger.info(data.getHost().getDisplayName() + " is hider!");
+			}
 			Bukkit.dispatchCommand(Bukkit.getConsoleSender(), cmd);
 		}
 	}
@@ -180,12 +189,13 @@ public class Game {
 	 * 
 	 * @param data
 	 */
-	private void seekerEffects(PlayerData data) {
+	public void seekerEffects(PlayerData data) {
 		logger.info(data.getHost().getDisplayName() + " is a seeker! (Potions)");
 		// give speed 3, 20 seconds blindness & slowness
-		data.getHost().addPotionEffect(new PotionEffect(PotionEffectType.SPEED, TOTAL_GAME_DURATION_TICKS, 2, false));
-		data.getHost().addPotionEffect(new PotionEffect(PotionEffectType.SLOW, 20 * 20, 25, false));
-		data.getHost().addPotionEffect(new PotionEffect(PotionEffectType.BLINDNESS, 20 * 20, 2, false));
+		data.getHost().addPotionEffect(new PotionEffect(PotionEffectType.SPEED, TOTAL_GAME_DURATION_TICKS, 2, true));
+		data.getHost().addPotionEffect(new PotionEffect(PotionEffectType.SLOW, 20 * 20, 25, true));
+		data.getHost().addPotionEffect(new PotionEffect(PotionEffectType.BLINDNESS, 20 * 20, 2, true));
+		data.getHost().addPotionEffect(new PotionEffect(PotionEffectType.DAMAGE_RESISTANCE, 20 * 20, 150, true));
 	}
 
 	/**
@@ -193,11 +203,12 @@ public class Game {
 	 * 
 	 * @param data
 	 */
-	private void hiderEffects(PlayerData data) {
+	public void hiderEffects(PlayerData data) {
 		logger.info(data.getHost().getDisplayName() + " is a hider! (Potions)");
 		// give speed 1, jump 3
-		data.getHost().addPotionEffect(new PotionEffect(PotionEffectType.SPEED, TOTAL_GAME_DURATION_TICKS, 0, false));
-		data.getHost().addPotionEffect(new PotionEffect(PotionEffectType.JUMP, TOTAL_GAME_DURATION_TICKS, 2, false));
+		data.getHost().addPotionEffect(new PotionEffect(PotionEffectType.SPEED, TOTAL_GAME_DURATION_TICKS, 0, true));
+		data.getHost().addPotionEffect(new PotionEffect(PotionEffectType.JUMP, TOTAL_GAME_DURATION_TICKS, 2, true));
+		data.getHost().addPotionEffect(new PotionEffect(PotionEffectType.DAMAGE_RESISTANCE, 20 * 20, 150, true));
 	}
 
 	/**
@@ -205,7 +216,7 @@ public class Game {
 	 * 
 	 * @param data
 	 */
-	private void seekerItems(PlayerData data) {
+	public void seekerItems(PlayerData data) {
 		logger.info(data.getHost().getDisplayName() + " is a seeker! (Items)");
 		// give diamond sword
 		ItemStack DIAMOND_SWORD = new ItemStack(Material.DIAMOND_SWORD);
@@ -224,7 +235,7 @@ public class Game {
 	 * 
 	 * @param data
 	 */
-	private void hiderItems(PlayerData data) {
+	public void hiderItems(PlayerData data) {
 		logger.info(data.getHost().getDisplayName() + " is a seeker! (Items)");
 		// give bow, 64 arrows
 
@@ -240,7 +251,7 @@ public class Game {
 		arrow_meta.setDisplayName("Hider's Projectiles of Justice");
 
 		ItemMeta disguise_meta = DISGUISE.getItemMeta();
-		disguise_meta.setDisplayName("Disguise-a-tron");
+		disguise_meta.setDisplayName("Disguise-a-tron 3000");
 
 		ItemMeta undisguise_meta = UNDISGUISE.getItemMeta();
 		undisguise_meta.setDisplayName("Disguise Remover");
@@ -289,17 +300,18 @@ public class Game {
 	public static Game nearestGame(ThreeDCoordinate c) {
 		double pX = c.x;
 		double pZ = c.z;
-		Reference.getLogger().info("Player coords for finding nearest game : " + pX + "," + pZ);
+		//Reference.getLogger().info("Player coords for finding nearest game : " + pX + "," + pZ);
 
 		HashMap<Double, ThreeDCoordinate> distances = new HashMap<Double, ThreeDCoordinate>();
 		for (ThreeDCoordinate coord : Game.activeGames.keySet()) {
 			double xDist = Math.sqrt((coord.x - pX) * (coord.x - pX));
 			double zDist = Math.sqrt((coord.z - pZ) * (coord.z - pZ));
-			Reference.getLogger().info("Z-Dist : " + zDist);
-			Reference.getLogger().info("Z-Dist : " + xDist);
+			
+			//Reference.getLogger().info("Z-Dist : " + zDist);
+			//Reference.getLogger().info("Z-Dist : " + xDist);
 
 			double hypDist = Math.sqrt((xDist * xDist) + (zDist * zDist));
-			Reference.getLogger().info("Hyp-Dist : " + hypDist);
+			//Reference.getLogger().info("Hyp-Dist : " + hypDist);
 			distances.put(hypDist, coord);
 		}
 
@@ -325,6 +337,7 @@ public class Game {
 			builder.append(data.getHost().getDisplayName() + ", ");
 		}
 		builder.append("]");
+		builder.append(" " + palette.toString());
 		builder.append(" canJoin:" + canJoin);
 
 		builder.append("}");

@@ -8,7 +8,9 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import net.clicksminuteper.HideAndSeek.main.Reference;
+import net.clicksminuteper.HideAndSeek.main.game.BlockPalette;
 import net.clicksminuteper.HideAndSeek.main.game.Game;
+import net.clicksminuteper.HideAndSeek.main.game.Palettes;
 import net.clicksminuteper.HideAndSeek.main.game.ThreeDCoordinate;
 
 public class CmdNewGame implements CommandExecutor {
@@ -27,6 +29,10 @@ public class CmdNewGame implements CommandExecutor {
 			return false;
 		}
 
+		BlockPalette palette = Palettes.getPalette(args[3]);
+		Reference.getLogger().info("Palette name: " + args[3]);
+		Reference.getLogger().info("Palette object: " + palette);
+
 		if (args[0] == null && sender instanceof Player) {
 			Player player = (Player) sender;
 
@@ -39,7 +45,11 @@ public class CmdNewGame implements CommandExecutor {
 
 			logger.info(
 					player.getDisplayName() + " has created a new game of HideAndSeek at : " + iGameX + "," + iGameZ);
-			Game.newGame(new Game(logger, new ThreeDCoordinate(iGameX, iGameY, iGameZ), args[3])).run();
+
+			Game game = Game.newGame(new Game(logger, new ThreeDCoordinate(iGameX, iGameY, iGameZ), palette));
+			game.run();
+			
+			player.sendMessage("New HideAndSeek game created! " + game);
 			return true;
 		} else {
 			Integer iGameX = new Integer(args[0]);
@@ -54,7 +64,7 @@ public class CmdNewGame implements CommandExecutor {
 			Logger loggerIn = logger;
 			ThreeDCoordinate coordIn = new ThreeDCoordinate(iGameX, iGameY, iGameZ);
 
-			Game game = new Game(loggerIn, coordIn, args[3]);
+			Game game = new Game(loggerIn, coordIn, palette);
 			Game.newGame(game);
 			game.run();
 			return true;

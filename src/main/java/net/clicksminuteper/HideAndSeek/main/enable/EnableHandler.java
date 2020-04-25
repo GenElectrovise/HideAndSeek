@@ -2,6 +2,8 @@ package net.clicksminuteper.HideAndSeek.main.enable;
 
 import java.util.logging.Logger;
 
+import net.clicksminuteper.HideAndSeek.main.game.Palettes;
+
 /**
  * Handles the enabling of the HideAndSeek plugin
  * 
@@ -17,13 +19,8 @@ public class EnableHandler {
 
 	public void handleEnable() {
 		logger.info("HideAndSeek.onEnable() : HideAndSeek Plugin is enabled ...");
-
-		/*
-		 * // For storing data on players HashMap<String, Integer> playerList = new
-		 * HashMap<String, Integer>(); for (Player player :
-		 * Bukkit.getServer().getOnlinePlayers()) { playerList.put(player.getName(),
-		 * playerData(player)); }
-		 */
+		
+		Palettes.generatePalettes();
 	}
 
 }
