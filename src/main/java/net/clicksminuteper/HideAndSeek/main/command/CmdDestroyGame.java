@@ -18,16 +18,17 @@
 
 package net.clicksminuteper.HideAndSeek.main.command;
 
+import org.bukkit.Location;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
 
-import net.clicksminuteper.HideAndSeek.main.game.Game;
-import net.clicksminuteper.HideAndSeek.main.util.ThreeDCoordinate;
+import net.clicksminuteper.HideAndSeek.main.game.Games;
 
 /**
- * Destroys the Game at the given coordinates, or the nearest Game to those if a
- * Game is not present at those coordinates
+ * Destroys the Game at the given Locations, or the nearest Game to those if a
+ * Game is not present at those Locations
  * 
  * @author GenElectrovise
  *
@@ -40,6 +41,12 @@ public class CmdDestroyGame implements CommandExecutor {
 		int gameY;
 		int gameZ;
 
+		if (!(sender instanceof Player)) {
+			return false;
+		}
+
+		Player player = (Player) sender;
+
 		try {
 			gameX = new Integer(args[0]);
 			gameY = new Integer(args[1]);
@@ -49,7 +56,7 @@ public class CmdDestroyGame implements CommandExecutor {
 			return false;
 		}
 
-		if (Game.nearestGame(new ThreeDCoordinate(gameX, gameY, gameZ)).destroy())
+		if (Games.nearestGame(new Location(player.getWorld(), gameX, gameY, gameZ)).destroy())
 			return true;
 
 		return false;

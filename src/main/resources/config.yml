@@ -1,5 +1,6 @@
 lobbylength: 20
 gamelength: 300
+debugEnabled: true
 palettes:
 -  genelectrovise:
    - DIAMOND_BLOCK

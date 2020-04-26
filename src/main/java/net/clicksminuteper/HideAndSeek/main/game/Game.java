@@ -18,190 +18,50 @@
 
 package net.clicksminuteper.HideAndSeek.main.game;
 
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
-import java.util.Random;
-import java.util.logging.Logger;
 
-import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
-import org.bukkit.potion.PotionEffect;
-import org.bukkit.potion.PotionEffectType;
 
-import net.clicksminuteper.HideAndSeek.main.Reference;
-import net.clicksminuteper.HideAndSeek.main.game.block.BlockPalette;
-import net.clicksminuteper.HideAndSeek.main.util.ThreeDCoordinate;
+import net.clicksminuteper.HideAndSeek.main.item.Constants;
+import net.clicksminuteper.HideAndSeek.main.util.SeekLog;
 
 public class Game {
-	private static final int TOTAL_GAME_DURATION_SECONDS = 300;
-	private static final int TOTAL_GAME_DURATION_TICKS = TOTAL_GAME_DURATION_SECONDS * 20;
-	public ThreeDCoordinate origin;
 	public HashMap<String, PlayerData> players = new HashMap<String, PlayerData>();
-	public static HashMap<ThreeDCoordinate, Game> activeGames = new HashMap<ThreeDCoordinate, Game>();
 	public boolean canJoin = false;
-	private Logger logger;
-	public static ArrayList<Player> playersInAllGames = new ArrayList<Player>();
-	private BlockPalette palette;
+	public GameData gamedata;
 
-	public static final ItemStack BOW = new ItemStack(Material.BOW);
-	public static final ItemStack ARROWS = new ItemStack(Material.ARROW, 64);
-	public static final ItemStack DISGUISE = new ItemStack(Material.CARVED_PUMPKIN);
-	public static final ItemStack UNDISGUISE = new ItemStack(Material.BARRIER);
-
-	public Game(Logger logger, ThreeDCoordinate origin, BlockPalette palette) {
-		this.logger = logger;
-		this.origin = origin;
-		this.palette = palette;
+	public Game(GameData data) {
+		this.gamedata = data;
 	}
 
-	/**
-	 * Adds a player to this {@link Game}
-	 * 
-	 * @param player {@link Player} to add
-	 * @return Their newly generated {@link PlayerData}
-	 */
-	public PlayerData addPlayer(Player player) {
-		playersInAllGames.add(player);
-		return players.put(player.getName(), new PlayerData(player));
-	}
-
-	/**
-	 * Removes a Player from this Game
-	 * 
-	 * @param player {@link Player} to remove
-	 * @return Their {@link PlayerData}
-	 */
-	public PlayerData removePlayer(Player player) {
-		playersInAllGames.add(player);
-		return players.remove(player.getName());
-	}
-
-	/**
-	 * Creates a new entry in the list of Games
-	 * 
-	 * @param game A {@link Game} to be added
-	 * @return The entered Game
-	 */
-	public static Game newGame(Game game) {
-		Reference.getLogger().info("Creating new Game at: " + game.origin + " With palette:" + game.getPalette());
-		return activeGames.put(game.origin, game);
-	}
-
-	/**
-	 * Runs a {@link Game}
-	 */
 	public void run() {
-		logger.info("Allowing players to join!");
-		allowPlayersToJoin(Reference.getConfighandler().getLobbyLength());
+		SeekLog.error("How I run Game?");
 	}
 
-	/**
-	 * Destroys this {@link Game}
-	 * 
-	 * @return Whether the {@link Game} was destroyed successfully
-	 */
 	public boolean destroy() {
-		try {
-			for (String name : this.players.keySet()) {
-				playersInAllGames.remove(players.get(name).getHost());
-			}
-			activeGames.remove(this.origin);
-			return true;
-		} catch (Exception e) {
-			logger.severe("EXCEPTION DESTROYING GAME!");
-			e.printStackTrace();
-		}
+
+		SeekLog.error("Game destruction incomplete!");
+
 		return false;
 	}
 
-	/**
-	 * Determines the play time.
-	 * 
-	 * @param seconds
-	 */
 	private void gamePlay(int seconds) {
-		Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(Reference.getHideandseek(), new Runnable() {
-			public void run() {
-				logger.info("Game at " + origin.x + origin.z + "ended!");
-				destroy();
-			}
-		}, (seconds * 20));
+		SeekLog.error("Game play not added!");
 	}
 
-	/**
-	 * Gives {@link Player}s items and effects and teleports them to the starting
-	 * location
-	 */
 	private void preparePlayers() {
-
-		// Make list of players in game
-		ArrayList<PlayerData> playersDataList = new ArrayList<PlayerData>();
-		for (PlayerData data : players.values()) {
-			playersDataList.add(data);
-			data.getHost().getInventory().clear();
-		}
-
-		try {
-			// Make a random player the first seeker
-			Random rand = new Random();
-			int seekerIndex = 0;
-			if (players.size() > 1) {
-				seekerIndex = rand.nextInt(players.size() - 1);
-			}
-			playersDataList.get(seekerIndex).setSeeker(true);
-		} catch (NullPointerException n) {
-			logger.warning("Players list for " + this + "is empty!");
-			n.printStackTrace();
-		}
-
-		// Give players effects
-		for (PlayerData data : playersDataList) {
-			if (data.isSeeker()) {
-				seekerEffects(data);
-			} else {
-				hiderEffects(data);
-			}
-		}
-
-		// Give players items
-		for (PlayerData data : playersDataList) {
-			if (data.isSeeker()) {
-				seekerItems(data);
-			} else {
-				hiderItems(data);
-			}
-		}
-
-		teleportPlayerToStartLocation();
+		SeekLog.error("No player prep!");
 	}
 
 	/**
 	 * Teleports {@link Player}s to the origin of this Game
 	 */
 	private void teleportPlayerToStartLocation() {
-		logger.info("Teleporting!");
-		// Tp players to start location
-		for (PlayerData data : players.values()) {
-			Player player = data.getHost();
-
-			String cmd = "tp " + player.getName() + " " + origin.x + " " + origin.y + " " + origin.z;
-			logger.info("cmd : " + cmd);
-
-			if (data.isSeeker()) {
-				data.getHost().sendMessage("You are a seeker!");
-				logger.info(data.getHost().getDisplayName() + " is seeker!");
-			} else {
-				data.getHost().sendMessage(
-						"You are a hider! Use the your pumpkin- Uh... I mean Disguise-a-tron 3000 to diguise yourself!");
-				logger.info(data.getHost().getDisplayName() + " is hider!");
-			}
-			Bukkit.dispatchCommand(Bukkit.getConsoleSender(), cmd);
-		}
+		SeekLog.error("Teleportation not implemented");
 	}
 
 	/**
@@ -210,12 +70,7 @@ public class Game {
 	 * @param data
 	 */
 	public void seekerEffects(PlayerData data) {
-		logger.info(data.getHost().getDisplayName() + " is a seeker! (Potions)");
-		// give speed 3, 20 seconds blindness & slowness
-		data.getHost().addPotionEffect(new PotionEffect(PotionEffectType.SPEED, TOTAL_GAME_DURATION_TICKS, 2, true));
-		data.getHost().addPotionEffect(new PotionEffect(PotionEffectType.SLOW, 20 * 20, 25, true));
-		data.getHost().addPotionEffect(new PotionEffect(PotionEffectType.BLINDNESS, 20 * 20, 2, true));
-		data.getHost().addPotionEffect(new PotionEffect(PotionEffectType.DAMAGE_RESISTANCE, 20 * 20, 150, true));
+		SeekLog.error("No seeker effects");
 	}
 
 	/**
@@ -224,11 +79,7 @@ public class Game {
 	 * @param data
 	 */
 	public void hiderEffects(PlayerData data) {
-		logger.info(data.getHost().getDisplayName() + " is a hider! (Potions)");
-		// give speed 1, jump 3
-		data.getHost().addPotionEffect(new PotionEffect(PotionEffectType.SPEED, TOTAL_GAME_DURATION_TICKS, 0, true));
-		data.getHost().addPotionEffect(new PotionEffect(PotionEffectType.JUMP, TOTAL_GAME_DURATION_TICKS, 2, true));
-		data.getHost().addPotionEffect(new PotionEffect(PotionEffectType.DAMAGE_RESISTANCE, 20 * 20, 150, true));
+		SeekLog.error("No hider effects");
 	}
 
 	/**
@@ -237,7 +88,7 @@ public class Game {
 	 * @param data
 	 */
 	public void seekerItems(PlayerData data) {
-		logger.info(data.getHost().getDisplayName() + " is a seeker! (Items)");
+		SeekLog.info(data.getHost().getDisplayName() + " is a seeker! (Items)");
 		// give diamond sword
 		ItemStack DIAMOND_SWORD = new ItemStack(Material.DIAMOND_SWORD);
 
@@ -256,93 +107,26 @@ public class Game {
 	 * @param data
 	 */
 	public void hiderItems(PlayerData data) {
-		logger.info(data.getHost().getDisplayName() + " is a seeker! (Items)");
-		// give bow, 64 arrows
+		SeekLog.info(data.getHost().getDisplayName() + " is a seeker! (Items)");
 
-		BOW.addEnchantment(Enchantment.ARROW_DAMAGE, 2);
-		BOW.addEnchantment(Enchantment.ARROW_INFINITE, 1);
-		BOW.addEnchantment(Enchantment.ARROW_KNOCKBACK, 1);
-		BOW.addEnchantment(Enchantment.VANISHING_CURSE, 1);
-		ItemMeta bow_meta = BOW.getItemMeta();
-		bow_meta.setUnbreakable(true);
-		bow_meta.setDisplayName("Seeker Deleter");
+		ItemStack bow = Constants.ItemConstants.BOW.itemStack;
+		ItemStack arrows = Constants.ItemConstants.BOW.itemStack;
+		ItemStack disguise = Constants.ItemConstants.BOW.itemStack;
+		ItemStack undisguise = Constants.ItemConstants.BOW.itemStack;
 
-		ItemMeta arrow_meta = ARROWS.getItemMeta();
-		arrow_meta.setDisplayName("Hider's Projectiles of Justice");
+		bow.setItemMeta(Constants.Metadata.hiderBow());
+		arrows.setItemMeta(Constants.Metadata.hiderArrows());
+		disguise.setItemMeta(Constants.Metadata.hiderDisguise());
+		undisguise.setItemMeta(Constants.Metadata.hiderUndiguise());
 
-		ItemMeta disguise_meta = DISGUISE.getItemMeta();
-		disguise_meta.setDisplayName("Disguise-a-tron 3000");
-
-		ItemMeta undisguise_meta = UNDISGUISE.getItemMeta();
-		undisguise_meta.setDisplayName("Disguise Remover");
-
-		data.getHost().getInventory().addItem(BOW);
-		data.getHost().getInventory().addItem(ARROWS);
-		data.getHost().getInventory().addItem(DISGUISE);
-		data.getHost().getInventory().addItem(UNDISGUISE);
+		data.getHost().getInventory().addItem(bow);
+		data.getHost().getInventory().addItem(arrows);
+		data.getHost().getInventory().addItem(disguise);
+		data.getHost().getInventory().addItem(undisguise);
 	}
 
 	public void allowPlayersToJoin(int seconds) {
-		canJoin = true;
-		logger.info("Game joinable");
 
-		logger.info("Schedualling wait... of " + seconds + " seconds");
-
-		logger.info("HideAndSeek " + Reference.getHideandseek());
-		logger.info("Bukkit Server : " + Bukkit.getServer());
-		logger.info("Bukkit Scheduler : " + Bukkit.getServer().getScheduler());
-
-		Runnable run = new Runnable() {
-			public void run() {
-				canJoin = false;
-				logger.info("Game no longer joinable!");
-
-				StringBuilder builder = new StringBuilder();
-				builder.append("Game at " + origin.toString() + " created with players ");
-				for (String name : players.keySet()) {
-					builder.append(name + " ");
-				}
-
-				logger.info(builder.toString());
-
-				// Next phase
-				logger.info("Starting game!");
-				preparePlayers();
-				logger.info("Gameplay commences!");
-				gamePlay(Reference.getConfighandler().getGameLength());
-			}
-		};
-		logger.info(new Integer(Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(Reference.getHideandseek(),
-				run, (seconds * 20))).toString());
-		logger.info("Please wait for the game to start...");
-	}
-
-	public static Game nearestGame(ThreeDCoordinate c) {
-		double pX = c.x;
-		double pZ = c.z;
-		//Reference.getLogger().info("Player coords for finding nearest game : " + pX + "," + pZ);
-
-		HashMap<Double, ThreeDCoordinate> distances = new HashMap<Double, ThreeDCoordinate>();
-		for (ThreeDCoordinate coord : Game.activeGames.keySet()) {
-			double xDist = Math.sqrt((coord.x - pX) * (coord.x - pX));
-			double zDist = Math.sqrt((coord.z - pZ) * (coord.z - pZ));
-			
-			//Reference.getLogger().info("Z-Dist : " + zDist);
-			//Reference.getLogger().info("Z-Dist : " + xDist);
-
-			double hypDist = Math.sqrt((xDist * xDist) + (zDist * zDist));
-			//Reference.getLogger().info("Hyp-Dist : " + hypDist);
-			distances.put(hypDist, coord);
-		}
-
-		double smallestDist = Collections.min(distances.keySet());
-		Reference.getLogger().info("Smallest : " + smallestDist);
-
-		ThreeDCoordinate nearestGameCoordinate = distances.get(smallestDist);
-		Reference.getLogger().info("At coord : " + nearestGameCoordinate);
-
-		Game nearestGame = activeGames.get(nearestGameCoordinate);
-		return nearestGame;
 	}
 
 	@Override
@@ -350,21 +134,22 @@ public class Game {
 		StringBuilder builder = new StringBuilder();
 		builder.append("Game{");
 
-		builder.append(" Origin{" + origin + "}");
+		builder.append(" Origin{" + gamedata.getOrigin() + "}");
 
 		builder.append(" Players[");
 		for (PlayerData data : players.values()) {
 			builder.append(data.getHost().getDisplayName() + ", ");
 		}
 		builder.append("]");
-		builder.append(" " + palette.toString());
+		builder.append(" " + gamedata.getPalette().toString());
 		builder.append(" canJoin:" + canJoin);
 
 		builder.append("}");
 		return builder.toString();
 	}
 
-	public BlockPalette getPalette() {
-		return palette;
+	public void addPlayer(Player player) {
+		// TODO Auto-generated method stub
+		
 	}
 }

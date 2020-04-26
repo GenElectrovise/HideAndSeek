@@ -20,7 +20,12 @@ package net.clicksminuteper.HideAndSeek.main.enable;
 
 import java.util.logging.Logger;
 
+import org.bukkit.Bukkit;
+
+import net.clicksminuteper.HideAndSeek.main.Reference;
+import net.clicksminuteper.HideAndSeek.main.citizens.trait.TraitNitwit;
 import net.clicksminuteper.HideAndSeek.main.game.block.Palettes;
+import net.clicksminuteper.HideAndSeek.main.util.SeekLog;
 
 /**
  * Handles the enabling of the HideAndSeek plugin
@@ -36,9 +41,25 @@ public class EnableHandler {
 	}
 
 	public void handleEnable() {
-		logger.info("HideAndSeek.onEnable() : HideAndSeek Plugin is enabled ...");
-		
+		SeekLog.info("HideAndSeek.onEnable() : HideAndSeek Plugin is enabled ...");
+
 		Palettes.generatePalettes();
+
+		citizens();
+
+	}
+
+	private void citizens() {
+		if (Bukkit.getServer().getPluginManager().getPlugin("Citizens") == null
+				|| Bukkit.getServer().getPluginManager().getPlugin("Citizens").isEnabled() == false) {
+			SeekLog.error("Citizens 2.0 not found or not enabled");
+			Bukkit.getServer().getPluginManager().disablePlugin(Reference.getHideandseek());
+			return;
+		}
+
+		// Register your trait with Citizens.
+		net.citizensnpcs.api.CitizensAPI.getTraitFactory().registerTrait(
+				net.citizensnpcs.api.trait.TraitInfo.create(TraitNitwit.class).withName("hns_gamecontroller"));
 	}
 
 }

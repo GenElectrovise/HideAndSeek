@@ -24,6 +24,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 
 import net.clicksminuteper.HideAndSeek.main.Reference;
+import net.clicksminuteper.HideAndSeek.main.util.SeekLog;
 
 public class Palettes {
 	public static HashMap<String, BlockPalette> PALETTES = new HashMap<String, BlockPalette>();
@@ -33,29 +34,29 @@ public class Palettes {
 	}
 
 	public static void generatePalettes() {
-		Reference.getLogger().info("Generating block palletes!");
+		SeekLog.info("Generating block palletes!");
 
-		Reference.getLogger().info(Reference.getHideandseek().toString());
-		Reference.getLogger().info(Reference.getHideandseek().getConfig().toString());
-		Reference.getLogger().info("lobbylength : "
+		SeekLog.info(Reference.getHideandseek().toString());
+		SeekLog.info(Reference.getHideandseek().getConfig().toString());
+		SeekLog.info("lobbylength : "
 				+ new Integer(Reference.getHideandseek().getConfig().getInt("lobbylength")).toString());
 		try {
 			@SuppressWarnings("unchecked")
 			List<LinkedHashMap<String, ArrayList<String>>> paletteConfigList = (List<LinkedHashMap<String, ArrayList<String>>>) Reference
 					.getHideandseek().getConfig().getList("palettes");
-			Reference.getLogger().info("Found : " + paletteConfigList);
+			SeekLog.info("Found : " + paletteConfigList);
 
 			for (LinkedHashMap<String, ArrayList<String>> list : paletteConfigList) {
-				Reference.getLogger().info(" - " + list);
+				SeekLog.info(" - " + list);
 				BlockPalette newPalette = new BlockPalette();
 
 				for (String key : list.keySet()) {
 					ArrayList<String> nestedList = list.get(key);
-					Reference.getLogger().info(" - - " + nestedList);
+					SeekLog.info(" - - " + nestedList);
 					
 					newPalette.name = key;
 					for (String blockName : nestedList) {
-						Reference.getLogger().info(" - - - " + blockName);
+						SeekLog.info(" - - - " + blockName);
 						newPalette.addBlock(blockName);
 					}
 				}
@@ -68,7 +69,7 @@ public class Palettes {
 			c.printStackTrace();
 		}
 
-		Reference.getLogger().info("Constructed palettes: " + PALETTES);
+		SeekLog.info("Constructed palettes: " + PALETTES);
 
 	}
 

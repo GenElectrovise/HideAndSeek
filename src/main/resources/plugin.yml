@@ -4,6 +4,7 @@ version: SNAPSHOT-0.0.1
 author: GenElectrovise
 description: A Plugin for running Hide And Seek games on your server.
 api-version: 1.15
+depend: [Citizens]
 commands:
    hnstest:
       description: Tests HideAndSeek's disguising functionality

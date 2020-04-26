@@ -24,6 +24,7 @@ import java.util.logging.Logger;
 import org.bukkit.command.CommandExecutor;
 
 import net.clicksminuteper.HideAndSeek.main.HideAndSeek;
+import net.clicksminuteper.HideAndSeek.main.util.SeekLog;
 
 public class CommandRegistry {
 
@@ -42,7 +43,7 @@ public class CommandRegistry {
 	public void registerAllListed() {
 		for (String name : commandsIn.keySet()) {
 			hideandseek.getCommand(name).setExecutor(commandsIn.get(name));
-			logger.info("Registering HideAndSeek commmand with name : " + name);
+			SeekLog.info("Registering HideAndSeek commmand with name : " + name);
 		}
 	}
 	

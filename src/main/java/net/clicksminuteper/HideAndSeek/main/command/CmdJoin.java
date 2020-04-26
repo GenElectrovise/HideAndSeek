@@ -18,6 +18,7 @@
 
 package net.clicksminuteper.HideAndSeek.main.command;
 
+import org.bukkit.Location;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -25,7 +26,7 @@ import org.bukkit.entity.Player;
 
 import net.clicksminuteper.HideAndSeek.main.Reference;
 import net.clicksminuteper.HideAndSeek.main.game.Game;
-import net.clicksminuteper.HideAndSeek.main.util.ThreeDCoordinate;
+import net.clicksminuteper.HideAndSeek.main.game.Games;
 
 /**
  * Command for joining a game of HideAndSeek
@@ -38,23 +39,22 @@ public class CmdJoin implements CommandExecutor {
 	@Override
 	public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
 		try {
-			ThreeDCoordinate pos;
+			Location pos;
 			Player player = (Player) sender;
 
 			// If no args
 			if (args[0] == null) {
 				// Pos is player's pos
-				pos = new ThreeDCoordinate(player.getLocation().getX(), player.getLocation().getY(),
-						player.getLocation().getZ());
+				pos = player.getLocation();
 				player.sendMessage("Joining from pos : " + pos);
 
 				// If has args, try to set pos to args
 			} else {
 				// Pos is args > Coord
-				pos = new ThreeDCoordinate(new Integer(args[0]), new Integer(args[1]), new Integer(args[2]));
+				pos = new Location(player.getWorld(), new Integer(args[0]), new Integer(args[1]), new Integer(args[2]));
 			}
 
-			Game nearestGame = Game.nearestGame(pos);
+			Game nearestGame = Games.nearestGame(pos);
 			if (nearestGame.canJoin) {
 				nearestGame.addPlayer(player);
 				player.sendMessage("Joining HideAndSeek!");

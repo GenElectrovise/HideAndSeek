@@ -28,6 +28,14 @@ public class ConfigHandler {
 	public ConfigHandler(FileConfiguration config) {
 		this.config = config;
 	}
+	
+	public void reload() {
+		config = Reference.getHideandseek().getConfig();
+	}
+	
+	public FileConfiguration getConfig() {
+		return config;
+	}
 
 	public List<String> getBlockPalette(String name) {
 		return config.getStringList("palettes." + name);
@@ -39,6 +47,10 @@ public class ConfigHandler {
 	
 	public int getGameLength() {
 		return config.getInt("gamelength");
+	}
+
+	public boolean getDebugEnabled() {
+		return config.getBoolean("debugEnabled");
 	}
 
 }

@@ -26,6 +26,7 @@ import org.bukkit.event.player.PlayerInteractEvent;
 
 import net.clicksminuteper.HideAndSeek.main.Reference;
 import net.clicksminuteper.HideAndSeek.main.disguise.LibsInterface;
+import net.clicksminuteper.HideAndSeek.main.util.SeekLog;
 
 public class ItemUndisguiseListener implements Listener {
 
@@ -34,7 +35,7 @@ public class ItemUndisguiseListener implements Listener {
 		Player player = event.getPlayer();
 
 		if (player.getInventory().getItemInMainHand().getType() == Material.BARRIER) {
-			Reference.getLogger().info("Undisguising " + player.getDisplayName() + "!");
+			SeekLog.info("Undisguising " + player.getDisplayName() + "!");
 			LibsInterface.cmdUndisguise(Reference.getLogger(), player);
 		}
 	}

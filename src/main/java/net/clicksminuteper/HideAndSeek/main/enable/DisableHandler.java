@@ -20,6 +20,8 @@ package net.clicksminuteper.HideAndSeek.main.enable;
 
 import java.util.logging.Logger;
 
+import net.clicksminuteper.HideAndSeek.main.util.SeekLog;
+
 /**
  * Handles the disabling of the HideAndSeek plugin
  * @author GenElectrovise
@@ -33,7 +35,7 @@ public class DisableHandler {
 	}
 
 	public void handleDisable() {
-		logger.info("HideAndSeek.onDisable() : HideAndSeek Plugin has been disabled ...");
+		SeekLog.info("HideAndSeek.onDisable() : HideAndSeek Plugin has been disabled ...");
 	}
 
 }

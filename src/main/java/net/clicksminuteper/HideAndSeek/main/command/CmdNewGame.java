@@ -20,6 +20,7 @@ package net.clicksminuteper.HideAndSeek.main.command;
 
 import java.util.logging.Logger;
 
+import org.bukkit.Location;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -27,9 +28,11 @@ import org.bukkit.entity.Player;
 
 import net.clicksminuteper.HideAndSeek.main.Reference;
 import net.clicksminuteper.HideAndSeek.main.game.Game;
+import net.clicksminuteper.HideAndSeek.main.game.GameData;
+import net.clicksminuteper.HideAndSeek.main.game.Games;
 import net.clicksminuteper.HideAndSeek.main.game.block.BlockPalette;
 import net.clicksminuteper.HideAndSeek.main.game.block.Palettes;
-import net.clicksminuteper.HideAndSeek.main.util.ThreeDCoordinate;
+import net.clicksminuteper.HideAndSeek.main.util.SeekLog;
 
 public class CmdNewGame implements CommandExecutor {
 	private Logger logger;
@@ -48,11 +51,17 @@ public class CmdNewGame implements CommandExecutor {
 		}
 
 		BlockPalette palette = Palettes.getPalette(args[3]);
-		Reference.getLogger().info("Palette name: " + args[3]);
-		Reference.getLogger().info("Palette object: " + palette);
+		SeekLog.info("Palette name: " + args[3]);
+		SeekLog.info("Palette object: " + palette);
 
-		if (args[0] == null && sender instanceof Player) {
-			Player player = (Player) sender;
+		if (!(sender instanceof Player)) {
+			sender.sendMessage("This command can only be run by a player, as a World object must be availables!");
+			return false;
+		}
+
+		Player player = (Player) sender;
+
+		if (args[0] == null) {
 
 			double dGameX = player.getLocation().getX();
 			double dGameY = player.getLocation().getY();
@@ -61,12 +70,12 @@ public class CmdNewGame implements CommandExecutor {
 			int iGameY = (int) Math.floor(dGameY);
 			int iGameZ = (int) Math.floor(dGameZ);
 
-			logger.info(
+			SeekLog.info(
 					player.getDisplayName() + " has created a new game of HideAndSeek at : " + iGameX + "," + iGameZ);
 
-			Game game = Game.newGame(new Game(logger, new ThreeDCoordinate(iGameX, iGameY, iGameZ), palette));
+			Game game = Games.newGame(new GameData(new Location(player.getWorld(), iGameX, iGameY, iGameZ), palette));
 			game.run();
-			
+
 			player.sendMessage("New HideAndSeek game created! " + game);
 			return true;
 		} else {
@@ -74,17 +83,15 @@ public class CmdNewGame implements CommandExecutor {
 			Integer iGameY = new Integer(args[1]);
 			Integer iGameZ = new Integer(args[2]);
 
-			logger.info("Creating new game of HideAndSeek at : " + iGameX + "," + iGameZ);
-			logger.info("Logger : " + logger);
-			logger.info("HideAndSeek : " + Reference.getHideandseek());
-			logger.info("2dCoord : " + new ThreeDCoordinate(iGameX, iGameY, iGameZ));
+			SeekLog.info("Creating new game of HideAndSeek at : " + iGameX + "," + iGameZ);
+			SeekLog.info("Logger : " + logger);
+			SeekLog.info("HideAndSeek : " + Reference.getHideandseek());
+			SeekLog.info("2dCoord : " + new Location(player.getWorld(), iGameX, iGameY, iGameZ));
 
-			Logger loggerIn = logger;
-			ThreeDCoordinate coordIn = new ThreeDCoordinate(iGameX, iGameY, iGameZ);
+			Location coordIn = new Location(player.getWorld(), iGameX, iGameY, iGameZ);
 
-			Game game = new Game(loggerIn, coordIn, palette);
-			Game.newGame(game);
-			game.run();
+			GameData data = new GameData(coordIn, palette);
+			Games.newGame(data);
 			return true;
 		}
 	}

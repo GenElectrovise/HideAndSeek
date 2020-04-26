@@ -23,6 +23,7 @@ import java.util.logging.Logger;
 import net.clicksminuteper.HideAndSeek.main.command.CommandRegistry;
 import net.clicksminuteper.HideAndSeek.main.enable.DisableHandler;
 import net.clicksminuteper.HideAndSeek.main.enable.EnableHandler;
+import net.clicksminuteper.HideAndSeek.main.util.SeekLog;
 
 public class Reference {
 	private static HideAndSeek hideandseek;
@@ -35,7 +36,7 @@ public class Reference {
 	public static void set() {
 		logger = hideandseek.getLogger();
 
-		logger.info("Setting important references! (Already set logger)");
+		SeekLog.info("Setting important references! (Already set logger)");
 		commandregistry = new CommandRegistry(logger, hideandseek);
 		enablehandler = new EnableHandler(logger);
 		disablehandler = new DisableHandler(logger);
@@ -43,7 +44,7 @@ public class Reference {
 	}
 
 	public static HideAndSeek setHideandseek(HideAndSeek hideandseek, Logger logger) {
-		logger.info("Setting HideAndSeek instance : " + hideandseek);
+		SeekLog.info("Setting HideAndSeek instance : " + hideandseek);
 		Reference.hideandseek = hideandseek;
 		return hideandseek;
 	}

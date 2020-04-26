@@ -27,6 +27,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import net.clicksminuteper.HideAndSeek.main.disguise.LibsInterface;
+import net.clicksminuteper.HideAndSeek.main.util.SeekLog;
 
 public class CmdDisguise implements CommandExecutor {
 	private Logger logger;
@@ -46,10 +47,10 @@ public class CmdDisguise implements CommandExecutor {
 				return false;
 			} else {
 				target = Bukkit.getPlayer(args[0]);
-				logger.info("Target : " + target.getDisplayName());
+				SeekLog.info("Target : " + target.getDisplayName());
 			}
 
-			logger.info("Block Type : " + args[1]);
+			SeekLog.info("Block Type : " + args[1]);
 			// If disguise cmd succeeds, return true
 			if (LibsInterface.cmdDisguise(logger, target, args[1])) {
 				return true;

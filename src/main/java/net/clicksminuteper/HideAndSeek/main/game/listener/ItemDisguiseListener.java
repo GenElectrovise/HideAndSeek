@@ -20,6 +20,7 @@ package net.clicksminuteper.HideAndSeek.main.game.listener;
 
 import java.util.Random;
 
+import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -29,8 +30,10 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import net.clicksminuteper.HideAndSeek.main.Reference;
 import net.clicksminuteper.HideAndSeek.main.disguise.LibsInterface;
 import net.clicksminuteper.HideAndSeek.main.game.Game;
+import net.clicksminuteper.HideAndSeek.main.game.Games;
 import net.clicksminuteper.HideAndSeek.main.game.block.BlockPalette;
-import net.clicksminuteper.HideAndSeek.main.util.ThreeDCoordinate;
+import net.clicksminuteper.HideAndSeek.main.item.Constants;
+import net.clicksminuteper.HideAndSeek.main.util.SeekLog;
 
 public class ItemDisguiseListener implements Listener {
 
@@ -38,21 +41,21 @@ public class ItemDisguiseListener implements Listener {
 	public void onPlayerRightClick(PlayerInteractEvent event) {
 		Player player = event.getPlayer();
 
-		if (Game.playersInAllGames.contains(player)) {
-			if (player.getInventory().getItemInMainHand() == Game.DISGUISE
+		if (Games.ACTIVE_PLAYERS.containsKey(player)) {
+			if (player.getInventory().getItemInMainHand() == Constants.ItemConstants.DISGUISE.itemStack
 					|| (player.getInventory().getItemInMainHand().getType() == Material.CARVED_PUMPKIN)) {
 
-				Reference.getLogger().info("Heard right click from participating player! Player was holding a "
+				SeekLog.info("Heard right click from participating player! Player was holding a "
 						+ player.getInventory().getItemInMainHand().getType() + ", so will disguise them randomly");
 
-				Reference.getLogger().info("Disguising " + player.getDisplayName() + "!");
+				SeekLog.info("Disguising " + player.getDisplayName() + "!");
 
-				Game nearestGame = Game.nearestGame(new ThreeDCoordinate(player.getLocation().getX(),
+				Game nearestGame = Games.nearestGame(new Location(player.getWorld(), player.getLocation().getX(),
 						player.getLocation().getY(), (player.getLocation().getZ())));
 
-				BlockPalette palette = nearestGame.getPalette();
+				BlockPalette palette = nearestGame.gamedata.getPalette();
 
-				Reference.getLogger().info(palette.toString());
+				SeekLog.info(palette.toString());
 
 				Random random = new Random();
 
