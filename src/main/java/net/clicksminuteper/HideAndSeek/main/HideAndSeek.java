@@ -1,3 +1,21 @@
+/*
+ * HideAndSeek -- A Hide and Seek plugin for Bukkit and Spigot
+    Copyright (C) 2020 GenElectrovise
+
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ */
+
 package net.clicksminuteper.HideAndSeek.main;
 
 import org.bukkit.Bukkit;
@@ -11,10 +29,10 @@ import net.clicksminuteper.HideAndSeek.main.command.CmdNewGame;
 import net.clicksminuteper.HideAndSeek.main.command.CommandRegistry;
 import net.clicksminuteper.HideAndSeek.main.enable.DisableHandler;
 import net.clicksminuteper.HideAndSeek.main.enable.EnableHandler;
-import net.clicksminuteper.HideAndSeek.main.game.ItemDisguiseListener;
-import net.clicksminuteper.HideAndSeek.main.game.ItemUndisguiseListener;
-import net.clicksminuteper.HideAndSeek.main.game.PlayerDeathListener;
-import net.clicksminuteper.HideAndSeek.main.game.PlayerMovementListener;
+import net.clicksminuteper.HideAndSeek.main.game.listener.ItemDisguiseListener;
+import net.clicksminuteper.HideAndSeek.main.game.listener.ItemUndisguiseListener;
+import net.clicksminuteper.HideAndSeek.main.game.listener.PlayerDeathListener;
+import net.clicksminuteper.HideAndSeek.main.game.listener.PlayerMovementListener;
 
 public final class HideAndSeek extends JavaPlugin {
 	private EnableHandler enablehandler;

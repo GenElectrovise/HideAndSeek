@@ -16,29 +16,21 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package net.clicksminuteper.HideAndSeek.main;
+package net.clicksminuteper.HideAndSeek.main.util;
 
-import java.util.List;
+public class ThreeDCoordinate {
+	public double x;
+	public double y;
+	public double z;
 
-import org.bukkit.configuration.file.FileConfiguration;
-
-public class ConfigHandler {
-	private FileConfiguration config;
-
-	public ConfigHandler(FileConfiguration config) {
-		this.config = config;
+	public ThreeDCoordinate(double x, double y, double z) {
+		this.x = x;
+		this.y = y;
+		this.z = z;
 	}
 
-	public List<String> getBlockPalette(String name) {
-		return config.getStringList("palettes." + name);
+	@Override
+	public String toString() {
+		return "{" + x + "," + y + "," + z + "}";
 	}
-	
-	public int getLobbyLength() {
-		return config.getInt("lobbylength");
-	}
-	
-	public int getGameLength() {
-		return config.getInt("gamelength");
-	}
-
 }

@@ -16,29 +16,26 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package net.clicksminuteper.HideAndSeek.main;
+package net.clicksminuteper.HideAndSeek.main.game.listener;
 
-import java.util.List;
+import org.bukkit.Material;
+import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
+import org.bukkit.event.player.PlayerInteractEvent;
 
-import org.bukkit.configuration.file.FileConfiguration;
+import net.clicksminuteper.HideAndSeek.main.Reference;
+import net.clicksminuteper.HideAndSeek.main.disguise.LibsInterface;
 
-public class ConfigHandler {
-	private FileConfiguration config;
+public class ItemUndisguiseListener implements Listener {
 
-	public ConfigHandler(FileConfiguration config) {
-		this.config = config;
+	@EventHandler
+	public void onPlayerRightClick(PlayerInteractEvent event) {
+		Player player = event.getPlayer();
+
+		if (player.getInventory().getItemInMainHand().getType() == Material.BARRIER) {
+			Reference.getLogger().info("Undisguising " + player.getDisplayName() + "!");
+			LibsInterface.cmdUndisguise(Reference.getLogger(), player);
+		}
 	}
-
-	public List<String> getBlockPalette(String name) {
-		return config.getStringList("palettes." + name);
-	}
-	
-	public int getLobbyLength() {
-		return config.getInt("lobbylength");
-	}
-	
-	public int getGameLength() {
-		return config.getInt("gamelength");
-	}
-
 }
