@@ -27,7 +27,6 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerInteractEvent;
 
-import net.clicksminuteper.HideAndSeek.main.Reference;
 import net.clicksminuteper.HideAndSeek.main.disguise.LibsInterface;
 import net.clicksminuteper.HideAndSeek.main.game.Game;
 import net.clicksminuteper.HideAndSeek.main.game.Games;
@@ -61,7 +60,7 @@ public class ItemDisguiseListener implements Listener {
 
 				String block = palette.getBlocks().get(random.nextInt(palette.getBlocks().size() - 1));
 
-				LibsInterface.cmdDisguise(Reference.getLogger(), player, block);
+				LibsInterface.cmdDisguise(player, block);
 			}
 
 		}

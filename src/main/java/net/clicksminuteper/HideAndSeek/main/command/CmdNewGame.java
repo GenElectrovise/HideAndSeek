@@ -18,15 +18,12 @@
 
 package net.clicksminuteper.HideAndSeek.main.command;
 
-import java.util.logging.Logger;
-
 import org.bukkit.Location;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import net.clicksminuteper.HideAndSeek.main.Reference;
 import net.clicksminuteper.HideAndSeek.main.game.Game;
 import net.clicksminuteper.HideAndSeek.main.game.GameData;
 import net.clicksminuteper.HideAndSeek.main.game.Games;
@@ -35,11 +32,6 @@ import net.clicksminuteper.HideAndSeek.main.game.block.Palettes;
 import net.clicksminuteper.HideAndSeek.main.util.SeekLog;
 
 public class CmdNewGame implements CommandExecutor {
-	private Logger logger;
-
-	public CmdNewGame(Logger logger) {
-		this.logger = logger;
-	}
 
 	@Override
 	public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
@@ -84,9 +76,6 @@ public class CmdNewGame implements CommandExecutor {
 			Integer iGameZ = new Integer(args[2]);
 
 			SeekLog.info("Creating new game of HideAndSeek at : " + iGameX + "," + iGameZ);
-			SeekLog.info("Logger : " + logger);
-			SeekLog.info("HideAndSeek : " + Reference.getHideandseek());
-			SeekLog.info("2dCoord : " + new Location(player.getWorld(), iGameX, iGameY, iGameZ));
 
 			Location coordIn = new Location(player.getWorld(), iGameX, iGameY, iGameZ);
 

@@ -20,7 +20,8 @@ package net.clicksminuteper.HideAndSeek.main.citizens.trait;
 import org.bukkit.event.EventHandler;
 
 import net.citizensnpcs.api.trait.Trait;
-import net.clicksminuteper.HideAndSeek.main.event.TickGamesEvent;
+import net.clicksminuteper.HideAndSeek.main.event.HideAndSeekTickGamesEvent;
+import net.clicksminuteper.HideAndSeek.main.game.Game;
 import net.clicksminuteper.HideAndSeek.main.util.SeekLog;
 
 /**
@@ -28,17 +29,24 @@ import net.clicksminuteper.HideAndSeek.main.util.SeekLog;
  *
  */
 public class TraitGameController extends Trait {
-
-	/**
-	 * @param name
-	 */
-	protected TraitGameController(String name) {
+	
+	private Game game;
+	
+	public TraitGameController() {
 		super("hns_gamecontroller");
+		this.game = new Game(this);
+	}
+	
+	/**
+	 * @return the game
+	 */
+	public Game getGame() {
+		return game;
 	}
 	
 	@EventHandler
-	public void listenForGameTick(TickGamesEvent event) {
-		SeekLog.info("Game controller heard TickGamesEvent!");
+	public void listenForGameTick(HideAndSeekTickGamesEvent event) {
+		SeekLog.debug("Game controller heard TickGamesEvent!");
 	}
 
 }

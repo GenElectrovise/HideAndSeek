@@ -26,16 +26,23 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
+import net.clicksminuteper.HideAndSeek.main.citizens.trait.TraitGameController;
 import net.clicksminuteper.HideAndSeek.main.item.Constants;
 import net.clicksminuteper.HideAndSeek.main.util.SeekLog;
 
 public class Game {
+	private TraitGameController gameController;
 	public HashMap<String, PlayerData> players = new HashMap<String, PlayerData>();
 	public boolean canJoin = false;
 	public GameData gamedata;
 
-	public Game(GameData data) {
-		this.gamedata = data;
+	/**
+	 * Runs and contains data for a {@link Game}. Controlled by a {@link TraitGameController}.
+	 * @param traitGameController The enclosing {@link TraitGameController} which owns this {@link Game}
+	 */
+	public Game(TraitGameController traitGameController) {
+		this.gameController = traitGameController;
+		SeekLog.info("New Game created by NPC at " + gameController.getNPC().getEntity().getLocation());
 	}
 
 	public void run() {
@@ -49,10 +56,12 @@ public class Game {
 		return false;
 	}
 
+	@SuppressWarnings("unused")
 	private void gamePlay(int seconds) {
 		SeekLog.error("Game play not added!");
 	}
 
+	@SuppressWarnings("unused")
 	private void preparePlayers() {
 		SeekLog.error("No player prep!");
 	}
@@ -60,6 +69,7 @@ public class Game {
 	/**
 	 * Teleports {@link Player}s to the origin of this Game
 	 */
+	@SuppressWarnings("unused")
 	private void teleportPlayerToStartLocation() {
 		SeekLog.error("Teleportation not implemented");
 	}

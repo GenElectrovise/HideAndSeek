@@ -5,7 +5,7 @@
 
 	<groupId>net.clicksminuteper</groupId>
 	<artifactId>HideAndSeek</artifactId>
-	<version>SNAPSHOT-1.0.0</version>
+	<version>SNAPSHOT-2.0.0</version>
 	<packaging>jar</packaging>
 
 	<name>bukkitplugin</name>

@@ -1,10 +1,10 @@
 main: net.clicksminuteper.HideAndSeek.main.HideAndSeek
 name: HideAndSeek
-version: SNAPSHOT-0.0.1
+version: SNAPSHOT-2.0.0
 author: GenElectrovise
 description: A Plugin for running Hide And Seek games on your server.
 api-version: 1.15
-depend: [Citizens]
+depend: [Citizens, LibsDisguises, ProtocolLib]
 commands:
    hnstest:
       description: Tests HideAndSeek's disguising functionality

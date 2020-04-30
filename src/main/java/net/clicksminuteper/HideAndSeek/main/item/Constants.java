@@ -30,8 +30,7 @@ import net.clicksminuteper.HideAndSeek.main.Reference;
 public class Constants {
 
 	public static enum ItemConstants {
-		BOW(new ItemStack(Material.BOW)), ARROWS(new ItemStack(Material.ARROW, 64)),
-		DISGUISE(new ItemStack(Material.CARVED_PUMPKIN)), UNDISGUISE(new ItemStack(Material.BARRIER));
+		BOW(new ItemStack(Material.BOW)), ARROWS(new ItemStack(Material.ARROW, 64)), DISGUISE(new ItemStack(Material.CARVED_PUMPKIN)), UNDISGUISE(new ItemStack(Material.BARRIER));
 
 		private ItemConstants(ItemStack s) {
 			this.itemStack = s;
@@ -41,8 +40,7 @@ public class Constants {
 	}
 
 	public static enum EnchantmentConstants {
-		BOW_POWER(Enchantment.ARROW_DAMAGE, 2), BOW_INFINITY(Enchantment.ARROW_INFINITE, 1),
-		BOW_PUNCH(Enchantment.ARROW_KNOCKBACK, 1), VANISHING(Enchantment.VANISHING_CURSE, 1);
+		BOW_POWER(Enchantment.ARROW_DAMAGE, 2), BOW_INFINITY(Enchantment.ARROW_INFINITE, 1), BOW_PUNCH(Enchantment.ARROW_KNOCKBACK, 1), VANISHING(Enchantment.VANISHING_CURSE, 1);
 
 		EnchantmentConstants(Enchantment e, int lvl) {
 			this.enchantment = e;
@@ -53,21 +51,17 @@ public class Constants {
 		public int level;
 	}
 
-	public static enum EffectConstants {
-		SEEKER_SPEED(new PotionEffect(PotionEffectType.SPEED, Reference.getConfighandler().getGameLength(), 2, true)),
-		SEEKER_SLOW(new PotionEffect(PotionEffectType.SLOW, 20 * 20, 25, true)),
-		SEEKER_BLIND(new PotionEffect(PotionEffectType.BLINDNESS, 20 * 20, 255, true)),
-		SEEKER_RESISTANCE(new PotionEffect(PotionEffectType.DAMAGE_RESISTANCE, 20 * 20, 150, true)),
+	public static class EffectConstants {
+		public static int gameDuration = Reference.getInstance().getHideAndSeek().getConfig().getInt("gameDuration");
 
-		HIDER_SPEED(new PotionEffect(PotionEffectType.SPEED, Reference.getConfighandler().getGameLength(), 0, true)),
-		HIDER_JUMP(new PotionEffect(PotionEffectType.JUMP, Reference.getConfighandler().getGameLength(), 2, true)),
-		HIDER_RESISTANCE(new PotionEffect(PotionEffectType.DAMAGE_RESISTANCE, 20 * 20, 150, true));
+		public static final PotionEffect SEEKER_SPEED = new PotionEffect(PotionEffectType.SPEED, gameDuration, 2, true);
+		public static final PotionEffect SEEKER_SLOW = new PotionEffect(PotionEffectType.SLOW, 20 * 20, 25, true);
+		public static final PotionEffect SEEKER_BLIND = new PotionEffect(PotionEffectType.BLINDNESS, 20 * 20, 255, true);
+		public static final PotionEffect SEEKER_RESISTANCE = new PotionEffect(PotionEffectType.DAMAGE_RESISTANCE, 20 * 20, 150, true);
 
-		private EffectConstants(PotionEffect p) {
-			this.effect = p;
-		}
-
-		public PotionEffect effect;
+		public static final PotionEffect HIDER_SPEED = new PotionEffect(PotionEffectType.SPEED, gameDuration, 0, true);
+		public static final PotionEffect HIDER_JUMP = new PotionEffect(PotionEffectType.JUMP, gameDuration, 2, true);
+		public static final PotionEffect HIDER_RESISTANCE = new PotionEffect(PotionEffectType.DAMAGE_RESISTANCE, 20 * 20, 150, true);
 	}
 
 	public static class Metadata {

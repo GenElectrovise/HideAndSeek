@@ -23,6 +23,7 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 
+import net.clicksminuteper.HideAndSeek.main.HideAndSeek;
 import net.clicksminuteper.HideAndSeek.main.Reference;
 import net.clicksminuteper.HideAndSeek.main.util.SeekLog;
 
@@ -36,14 +37,13 @@ public class Palettes {
 	public static void generatePalettes() {
 		SeekLog.info("Generating block palletes!");
 
-		SeekLog.info(Reference.getHideandseek().toString());
-		SeekLog.info(Reference.getHideandseek().getConfig().toString());
+		SeekLog.info(Reference.getInstance().getHideAndSeek().toString());
+		SeekLog.info(Reference.getInstance().getHideAndSeek().getConfig().toString());
 		SeekLog.info("lobbylength : "
-				+ new Integer(Reference.getHideandseek().getConfig().getInt("lobbylength")).toString());
+				+ new Integer(Reference.getInstance().getHideAndSeek().getConfig().getInt("lobbylength")).toString());
 		try {
 			@SuppressWarnings("unchecked")
-			List<LinkedHashMap<String, ArrayList<String>>> paletteConfigList = (List<LinkedHashMap<String, ArrayList<String>>>) Reference
-					.getHideandseek().getConfig().getList("palettes");
+			List<LinkedHashMap<String, ArrayList<String>>> paletteConfigList = (List<LinkedHashMap<String, ArrayList<String>>>) Reference.getInstance().getHideAndSeek().getConfig().getList("palettes");
 			SeekLog.info("Found : " + paletteConfigList);
 
 			for (LinkedHashMap<String, ArrayList<String>> list : paletteConfigList) {
@@ -53,7 +53,7 @@ public class Palettes {
 				for (String key : list.keySet()) {
 					ArrayList<String> nestedList = list.get(key);
 					SeekLog.info(" - - " + nestedList);
-					
+
 					newPalette.name = key;
 					for (String blockName : nestedList) {
 						SeekLog.info(" - - - " + blockName);
@@ -65,7 +65,7 @@ public class Palettes {
 			}
 
 		} catch (ClassCastException c) {
-			Reference.getLogger().severe("ERROR! CONFIGURATION IS INVALID! BLOCK PALETTES CAN ONLY CONTAIN STRINGS!");
+			SeekLog.error("ERROR! CONFIGURATION IS INVALID! BLOCK PALETTES CAN ONLY CONTAIN STRINGS!");
 			c.printStackTrace();
 		}
 

@@ -41,7 +41,7 @@ public class TraitNitwit extends Trait {
 
 	JavaPlugin plugin;
 
-	protected TraitNitwit() {
+	public TraitNitwit() {
 		super("hns_nitwit");
 		plugin = JavaPlugin.getPlugin(HideAndSeek.class);
 	}

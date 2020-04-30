@@ -18,58 +18,62 @@
 
 package net.clicksminuteper.HideAndSeek.main;
 
-import java.util.logging.Logger;
-
 import net.clicksminuteper.HideAndSeek.main.command.CommandRegistry;
-import net.clicksminuteper.HideAndSeek.main.enable.DisableHandler;
-import net.clicksminuteper.HideAndSeek.main.enable.EnableHandler;
 import net.clicksminuteper.HideAndSeek.main.util.SeekLog;
 
 public class Reference {
-	private static HideAndSeek hideandseek;
-	private static Logger logger;
-	private static CommandRegistry commandregistry;
-	private static EnableHandler enablehandler;
-	private static DisableHandler disablehandler;
-	private static ConfigHandler confighandler;
+	private static Reference instance;
+	private HideAndSeek hideAndSeek;
+	private CommandRegistry commandRegistry;
+	private EnableHandler enableHandler;
 
-	public static void set() {
-		logger = hideandseek.getLogger();
+	public void set(HideAndSeek hideAndSeek) {
+		this.hideAndSeek = hideAndSeek;
+		SeekLog.setLogger(hideAndSeek.getLogger());
+		commandRegistry = new CommandRegistry();
+		enableHandler = new EnableHandler();
 
-		SeekLog.info("Setting important references! (Already set logger)");
-		commandregistry = new CommandRegistry(logger, hideandseek);
-		enablehandler = new EnableHandler(logger);
-		disablehandler = new DisableHandler(logger);
-		confighandler = new ConfigHandler(hideandseek.getConfig());
+		SeekLog.info("Reference class populated!");
 	}
 
-	public static HideAndSeek setHideandseek(HideAndSeek hideandseek, Logger logger) {
-		SeekLog.info("Setting HideAndSeek instance : " + hideandseek);
-		Reference.hideandseek = hideandseek;
-		return hideandseek;
+	/**
+	 * @param commandRegistry the commandRegistry to set
+	 */
+	public void setCommandRegistry(CommandRegistry commandRegistry) {
+		this.commandRegistry = commandRegistry;
 	}
 
-	public static HideAndSeek getHideandseek() {
-		return hideandseek;
+	/**
+	 * @param enableHandler the enableHandler to set
+	 */
+	public void setEnableHandler(EnableHandler enableHandler) {
+		this.enableHandler = enableHandler;
 	}
 
-	public static Logger getLogger() {
-		return logger;
+	/**
+	 * @param hideAndSeek the hideAndSeek to set
+	 */
+	public void setHideAndSeek(HideAndSeek hideAndSeek) {
+		this.hideAndSeek = hideAndSeek;
 	}
 
-	public static CommandRegistry getCommandregistry() {
-		return commandregistry;
+	public HideAndSeek getHideAndSeek() {
+		return hideAndSeek;
 	}
 
-	public static EnableHandler getEnablehandler() {
-		return enablehandler;
+	public CommandRegistry getCommandRegistry() {
+		return commandRegistry;
 	}
 
-	public static DisableHandler getDisablehandler() {
-		return disablehandler;
+	public EnableHandler getEnableHandler() {
+		return enableHandler;
 	}
-	
-	public static ConfigHandler getConfighandler() {
-		return confighandler;
+
+	public Reference() {
+		Reference.instance = this;
+	}
+
+	public static Reference getInstance() {
+		return instance;
 	}
 }

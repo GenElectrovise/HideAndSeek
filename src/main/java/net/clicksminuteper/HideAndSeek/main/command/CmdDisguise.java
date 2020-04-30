@@ -18,8 +18,6 @@
 
 package net.clicksminuteper.HideAndSeek.main.command;
 
-import java.util.logging.Logger;
-
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -30,11 +28,6 @@ import net.clicksminuteper.HideAndSeek.main.disguise.LibsInterface;
 import net.clicksminuteper.HideAndSeek.main.util.SeekLog;
 
 public class CmdDisguise implements CommandExecutor {
-	private Logger logger;
-
-	public CmdDisguise(Logger logger) {
-		this.logger = logger;
-	}
 
 	@Override
 	public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
@@ -52,7 +45,7 @@ public class CmdDisguise implements CommandExecutor {
 
 			SeekLog.info("Block Type : " + args[1]);
 			// If disguise cmd succeeds, return true
-			if (LibsInterface.cmdDisguise(logger, target, args[1])) {
+			if (LibsInterface.cmdDisguise(target, args[1])) {
 				return true;
 			}
 

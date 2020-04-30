@@ -19,40 +19,37 @@
 package net.clicksminuteper.HideAndSeek.main.command;
 
 import java.util.HashMap;
-import java.util.logging.Logger;
 
 import org.bukkit.command.CommandExecutor;
 
-import net.clicksminuteper.HideAndSeek.main.HideAndSeek;
+import net.clicksminuteper.HideAndSeek.main.Reference;
 import net.clicksminuteper.HideAndSeek.main.util.SeekLog;
 
 public class CommandRegistry {
 
 	public static HashMap<String, CommandExecutor> commandsIn = new HashMap<String, CommandExecutor>();
-	public Logger logger;
-	public HideAndSeek hideandseek;
-
-	public CommandRegistry(Logger logger, HideAndSeek hideandseek) {
-		this.logger = logger;
-		this.hideandseek = hideandseek;
-	}
 
 	/**
 	 * Registers all listed commands from the <i>commmandsIn</i> HashMap
 	 */
-	public void registerAllListed() {
+	public static void registerAllListed() {
 		for (String name : commandsIn.keySet()) {
-			hideandseek.getCommand(name).setExecutor(commandsIn.get(name));
+			Reference.getInstance().getHideAndSeek().getCommand(name).setExecutor(commandsIn.get(name));
 			SeekLog.info("Registering HideAndSeek commmand with name : " + name);
 		}
 	}
-	
-	public void addToRegister(String name, CommandExecutor executor) {
+
+	public static void addToRegister(String name, CommandExecutor executor) {
 		commandsIn.put(name, executor);
 	}
-	
-	public HideAndSeek getHideandseek() {
-		return hideandseek;
+
+	public static void prepare() {
+		CommandRegistry.addToRegister("hnstest", new CmdDisguise());
+		CommandRegistry.addToRegister("newgame", new CmdNewGame());
+		CommandRegistry.addToRegister("join", new CmdJoin());
+		CommandRegistry.addToRegister("destroygame", new CmdDestroyGame());
+
+		CommandRegistry.registerAllListed();
 	}
 
 }

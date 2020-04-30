@@ -4,9 +4,13 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 
+import net.clicksminuteper.HideAndSeek.main.HideAndSeek;
+import net.clicksminuteper.HideAndSeek.main.Reference;
+import net.clicksminuteper.HideAndSeek.main.event.HideAndSeekTickGamesEvent;
 import net.clicksminuteper.HideAndSeek.main.util.SeekLog;
 
 public class Games {
@@ -34,7 +38,7 @@ public class Games {
 	}
 
 	public static Game newGame(GameData data) {
-		// TODO Auto-generated method stub
+		
 		return null;
 	}
 
@@ -61,5 +65,17 @@ public class Games {
 
 		double smallest = Collections.min(distances.keySet());
 		return distances.get(new Double(smallest));
+	}
+	
+	public static final void createGamesTickCycle() {
+		Bukkit.getScheduler().scheduleSyncRepeatingTask(Reference.getInstance().getHideAndSeek(), new Runnable() {
+			
+			@Override
+			public void run() {
+				HideAndSeekTickGamesEvent tickGamesEvent = new HideAndSeekTickGamesEvent();
+				Bukkit.getServer().getPluginManager().callEvent(tickGamesEvent);
+				
+			}
+		}, 0, 20L);
 	}
 }

@@ -24,9 +24,9 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import net.clicksminuteper.HideAndSeek.main.Reference;
 import net.clicksminuteper.HideAndSeek.main.game.Game;
 import net.clicksminuteper.HideAndSeek.main.game.Games;
+import net.clicksminuteper.HideAndSeek.main.util.SeekLog;
 
 /**
  * Command for joining a game of HideAndSeek
@@ -67,7 +67,7 @@ public class CmdJoin implements CommandExecutor {
 			sender.sendMessage("Incorrect arguments for command 'join' OR 'join X Y Z'");
 			return false;
 		} catch (Exception e) {
-			Reference.getLogger().warning("Incorrect arguments for command '" + command.toString() + "' sent by "
+			SeekLog.warning("Incorrect arguments for command '" + command.toString() + "' sent by "
 					+ ((Player) sender).getDisplayName());
 		}
 

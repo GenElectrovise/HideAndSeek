@@ -18,8 +18,6 @@
 
 package net.clicksminuteper.HideAndSeek.main.disguise;
 
-import java.util.logging.Logger;
-
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 
@@ -30,20 +28,20 @@ import net.clicksminuteper.HideAndSeek.main.util.SeekLog;
  *
  */
 public class LibsInterface {
-	public static boolean cmdDisguise(Logger logger, CommandSender sender, String blockType) {
+	public static boolean cmdDisguise(CommandSender sender, String blockType) {
 		SeekLog.info("ARGS == " + sender.getName() + " : " + blockType);
 
 		return Bukkit.dispatchCommand(Bukkit.getServer().getConsoleSender(),
-				concatDisguisePlayerToFallingBlockCmd(logger, sender.getName(), blockType));
+				concatDisguisePlayerToFallingBlockCmd(sender.getName(), blockType));
 	}
 
-	private static String concatDisguisePlayerToFallingBlockCmd(Logger logger, String playerName, String blockName) {
+	private static String concatDisguisePlayerToFallingBlockCmd(String playerName, String blockName) {
 		String out = "disguiseplayer " + playerName + " FALLING_BLOCK " + blockName.toUpperCase();
 		SeekLog.info(out);
 		return out;
 	}
 
-	public static boolean cmdUndisguise(Logger logger, CommandSender sender) {
+	public static boolean cmdUndisguise(CommandSender sender) {
 		SeekLog.info("ARGS == " + sender.getName());
 
 		return Bukkit.dispatchCommand(sender, "undisguiseplayer " + sender.getName());

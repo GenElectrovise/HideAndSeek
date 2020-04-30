@@ -21,8 +21,6 @@ package net.clicksminuteper.HideAndSeek.main.game.block;
 import java.util.ArrayList;
 import java.util.List;
 
-import net.minecraft.server.v1_15_R1.Blocks;
-
 public class BlockPalette {
 	public ArrayList<String> BLOCKS = new ArrayList<String>();
 	public String name;

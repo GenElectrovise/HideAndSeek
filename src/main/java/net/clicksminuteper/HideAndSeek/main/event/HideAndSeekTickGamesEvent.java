@@ -20,19 +20,36 @@ package net.clicksminuteper.HideAndSeek.main.event;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 
+import net.clicksminuteper.HideAndSeek.main.util.SeekLog;
+
 /**
  * @author GenElectrovise
  *
  */
-public class TickGamesEvent extends Event {
+public class HideAndSeekTickGamesEvent extends Event {
 
-	/* (non-Javadoc)
-	 * @see org.bukkit.event.Event#getHandlers()
-	 */
+	private static final HandlerList handlers = new HandlerList();
+
+	public HideAndSeekTickGamesEvent() {
+		SeekLog.debug("HideAndSeekTickGamesEvent");
+	}
+
 	@Override
 	public HandlerList getHandlers() {
-		
-		return null;
+		return handlers;
 	}
+
+	public static HandlerList getHandlerList() {
+		return handlers;
+	}
+
+	// Create the event
+	// HideAndSeekTickGamesEvent tickGamesEvent = new HideAndSeekTickGamesEvent();
+
+	// Call the event
+	// Bukkit.getServer().getPluginManager().callEvent(event);
+
+	// Do the event
+	// Bukkit.getServer().broadcastMessage(event.getMessage());
 
 }

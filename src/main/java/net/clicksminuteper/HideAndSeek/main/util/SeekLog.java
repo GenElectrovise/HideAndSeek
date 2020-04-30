@@ -18,39 +18,50 @@
 
 package net.clicksminuteper.HideAndSeek.main.util;
 
+import java.util.logging.Logger;
+
 import net.clicksminuteper.HideAndSeek.main.Reference;
 
 public class SeekLog {
 
-	public static boolean debubEnabled = Reference.getConfighandler().getDebugEnabled();
+	protected static Logger logger;
+	public static boolean debubEnabled = Reference.getInstance().getHideAndSeek().getConfig().getBoolean("debugEnabled");
 
 	private static String getLastInStack() {
 		StackTraceElement[] stackTraceElements = Thread.currentThread().getStackTrace();
-		int length = stackTraceElements.length;
 
-		String className = stackTraceElements[length - 1].getClassName();
-		int lineNumber = stackTraceElements[length - 1].getLineNumber();
-		String methodName = stackTraceElements[length - 1].getMethodName();
+		// [0] is most recent in stack
+		String className = stackTraceElements[2].getFileName();
+		int lineNumber = stackTraceElements[2].getLineNumber();
+		String methodName = stackTraceElements[2].getMethodName();
 
-		return new StringBuilder().append("{" + className).append(" | " + lineNumber).append(" | " + methodName + "}")
-				.toString();
+		String out = ("{" + className) + (" | " + lineNumber) + (" | " + methodName + "}");
+
+		return out;
 	}
 
 	public static void info(String msg) {
-		SeekLog.info(getLastInStack() + " : " + msg);
+		logger.info(getLastInStack() + " : " + msg);
 	}
 
 	public static void warning(String msg) {
-		Reference.getLogger().warning(getLastInStack() + " : " + msg);
+		logger.warning(getLastInStack() + " : " + msg);
 	}
 
 	public static void error(String msg) {
-		Reference.getLogger().severe(getLastInStack() + " : " + msg);
+		logger.severe(getLastInStack() + " : " + msg);
 	}
 
 	public static void debug(String msg) {
 		if (debubEnabled) {
-			SeekLog.info("[DEBUG] " + getLastInStack() + " : " + msg);
+			logger.info("[DEBUG] " + getLastInStack() + " : " + msg);
 		}
+	}
+
+	/**
+	 * @param logger the Logger instance to use for logging methods.
+	 */
+	public static void setLogger(Logger logger) {
+		SeekLog.logger = logger;
 	}
 }

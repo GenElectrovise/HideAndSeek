@@ -30,7 +30,6 @@ import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
-import net.clicksminuteper.HideAndSeek.main.Reference;
 import net.clicksminuteper.HideAndSeek.main.disguise.LibsInterface;
 import net.clicksminuteper.HideAndSeek.main.game.Game;
 import net.clicksminuteper.HideAndSeek.main.game.Games;
@@ -71,7 +70,7 @@ public class PlayerDeathListener implements Listener {
 					player.setHealth(player.getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue());
 					SeekLog.info("Reset their health to max");
 
-					LibsInterface.cmdUndisguise(Reference.getLogger(), player);
+					LibsInterface.cmdUndisguise(player);
 
 					Bukkit.dispatchCommand(Bukkit.getConsoleSender(),
 							"tp " + player.getName() + " " + nearestGame.gamedata.getOrigin().getX() + " "

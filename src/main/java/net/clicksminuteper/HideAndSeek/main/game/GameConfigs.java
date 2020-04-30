@@ -7,8 +7,7 @@ public class GameConfigs {
 	public int LOBBY_DURATION;
 
 	public GameConfigs() {
-		Reference.getConfighandler().reload();
-		GAME_DURATION = Reference.getConfighandler().getGameLength();
-		LOBBY_DURATION = Reference.getConfighandler().getLobbyLength();
+		GAME_DURATION = Reference.getInstance().getHideAndSeek().getConfig().getInt("gameDuration");
+		LOBBY_DURATION = Reference.getInstance().getHideAndSeek().getConfig().getInt("lobbyDuration");
 	}
 }

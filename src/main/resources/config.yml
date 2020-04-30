@@ -1,5 +1,5 @@
-lobbylength: 20
-gamelength: 300
+lobbyDuration: 20
+gameDuration: 300
 debugEnabled: true
 palettes:
 -  genelectrovise:
