@@ -44,10 +44,11 @@ public class CommandRegistry {
 	}
 
 	public static void prepare() {
-		CommandRegistry.addToRegister("hnstest", new CmdDisguise());
 		CommandRegistry.addToRegister("newgame", new CmdNewGame());
 		CommandRegistry.addToRegister("join", new CmdJoin());
 		CommandRegistry.addToRegister("destroygame", new CmdDestroyGame());
+		CommandRegistry.addToRegister("listgames", new CmdListGames());
+		CommandRegistry.addToRegister("nitwit", new CmdNitwit());
 
 		CommandRegistry.registerAllListed();
 	}

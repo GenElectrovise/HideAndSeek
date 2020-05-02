@@ -59,6 +59,26 @@ public class SeekLog {
 	}
 
 	/**
+	 * Prints the stack-trace given by elements.
+	 * 
+	 * @param elements A {@link StackTraceElement}[] to print.
+	 */
+	public static void stacktrace(StackTraceElement... elements) {
+		for (StackTraceElement elem : elements) {
+			SeekLog.stElem(elem);
+		}
+	}
+
+	/**
+	 * Prints one element of a stack-trace.
+	 * 
+	 * @param elem A {@link StackTraceElement} to print.
+	 */
+	private static void stElem(StackTraceElement elem) {
+		logger.severe("[STACKTRACE] " + elem.toString());
+	}
+
+	/**
 	 * @param logger the Logger instance to use for logging methods.
 	 */
 	public static void setLogger(Logger logger) {

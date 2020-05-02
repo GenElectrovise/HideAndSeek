@@ -6,11 +6,6 @@ description: A Plugin for running Hide And Seek games on your server.
 api-version: 1.15
 depend: [Citizens, LibsDisguises, ProtocolLib]
 commands:
-   hnstest:
-      description: Tests HideAndSeek's disguising functionality
-      usage: hnstest TARGET BLOCK
-      permission: hideandseek.hnstest
-      permission-message: You don't have the hideandseek.hnstest permission.
    newgame:
       description: Creates a new HideAndSeek Game at the given coords
       usage: newgame X Y Z PALETTE
@@ -26,3 +21,13 @@ commands:
       usage: destroy X Y Z
       permission: hideandseek.destroygame
       permission-message: You don't have the hideandseek.destroygame permission.
+   listgames:
+      description: Lists the active HideAndSeek games
+      usage: listgames
+      permission: hideandseek.listgames
+      permission-message: You don't have the hideandseek.listgames permission.
+   nitwit:
+      description: Spawns a HideAndSeek nitwit at the calling player's location.
+      usage: nitwit
+      permission: hideandseek.nitwit
+      permission-message: You don't have the hideandseek.nitwit permission.

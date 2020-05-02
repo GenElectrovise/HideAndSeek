@@ -6,15 +6,18 @@ import java.util.HashMap;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 
-import net.clicksminuteper.HideAndSeek.main.HideAndSeek;
+import net.citizensnpcs.api.CitizensAPI;
+import net.citizensnpcs.api.npc.NPC;
 import net.clicksminuteper.HideAndSeek.main.Reference;
+import net.clicksminuteper.HideAndSeek.main.citizens.trait.TraitGameController;
 import net.clicksminuteper.HideAndSeek.main.event.HideAndSeekTickGamesEvent;
 import net.clicksminuteper.HideAndSeek.main.util.SeekLog;
 
 public class Games {
-	public static final ArrayList<Game> ACTIVE_GAMES = new ArrayList<Game>();
+	public static final ArrayList<NPC> ACTIVE_GAMES = new ArrayList<NPC>();
 	public static final HashMap<Player, PlayerData> ACTIVE_PLAYERS = new HashMap<Player, PlayerData>();
 
 	public static void addActivePlayer(Player player) {
@@ -29,43 +32,37 @@ public class Games {
 		return ACTIVE_PLAYERS.containsKey(player);
 	}
 
-	public static void addGame(Game game) {
-		ACTIVE_GAMES.add(game);
-	}
-
-	public static void removeGame(Game game) {
-		ACTIVE_GAMES.remove(game);
-	}
-
-	public static Game newGame(GameData data) {
-
-		return null;
-	}
-
-	public static Game newGame(Location loc, String paletteName) {
-
-		return null;
+	public static NPC newGame(Location loc, String paletteName) {
+		NPC npc = CitizensAPI.getNPCRegistry().createNPC(EntityType.PLAYER, "Hide and Seek Master");
+		npc.spawn(loc);
+		ACTIVE_GAMES.add(npc);
+		return npc;
 	}
 
 	public static Game nearestGame(Location l) {
 		SeekLog.debug("Coords to find nearest game to : " + l.toString());
 
 		HashMap<Double, Game> distances = new HashMap<Double, Game>();
-		for (Game game : ACTIVE_GAMES) {
-			GameData data = game.gamedata;
-			Location g = data.getOrigin();
-			Location pt3 = new Location(g.getWorld(), g.getX(), l.getY(), l.getZ());
+		for (NPC npc : ACTIVE_GAMES) {
+			if (npc.hasTrait(TraitGameController.class)) {
+				Game game = npc.getTrait(TraitGameController.class).getGame();
 
-			// Find horizontal hypotenuse
-			double distPt3AToC = pt3.getX() - l.getX();
-			double distGToPt3A = pt3.getZ() - g.getZ();
-			double horizontalHyp = Math.sqrt((distGToPt3A * distGToPt3A) + (distPt3AToC * distPt3AToC));
+				GameData data = game.gamedata;
+				Location g = data.getOrigin();
+				Location pt3 = new Location(g.getWorld(), g.getX(), l.getY(), l.getZ());
 
-			double distPt3BToC = horizontalHyp;
-			double heightDifference = l.getY() - g.getY();
-			double verticalHyp = Math.sqrt((heightDifference * heightDifference) + (distPt3BToC * distPt3BToC));
+				// Find horizontal hypotenuse
+				double distPt3AToC = pt3.getX() - l.getX();
+				double distGToPt3A = pt3.getZ() - g.getZ();
+				double horizontalHyp = Math.sqrt((distGToPt3A * distGToPt3A) + (distPt3AToC * distPt3AToC));
 
-			distances.put(verticalHyp, game);
+				double distPt3BToC = horizontalHyp;
+				double heightDifference = l.getY() - g.getY();
+				double verticalHyp = Math.sqrt((heightDifference * heightDifference) + (distPt3BToC * distPt3BToC));
+
+				distances.put(verticalHyp, game);
+
+			}
 		}
 
 		double smallest = Collections.min(distances.keySet());
