@@ -39,11 +39,11 @@ public class Palettes {
 
 		SeekLog.info(Reference.getInstance().getHideAndSeek().toString());
 		SeekLog.info(Reference.getInstance().getHideAndSeek().getConfig().toString());
-		SeekLog.info("lobbylength : "
-				+ new Integer(Reference.getInstance().getHideAndSeek().getConfig().getInt("lobbylength")).toString());
+		SeekLog.info("lobbylength : " + new Integer(Reference.getInstance().getHideAndSeek().getConfig().getInt("lobbylength")).toString());
 		try {
 			@SuppressWarnings("unchecked")
-			List<LinkedHashMap<String, ArrayList<String>>> paletteConfigList = (List<LinkedHashMap<String, ArrayList<String>>>) Reference.getInstance().getHideAndSeek().getConfig().getList("palettes");
+			List<LinkedHashMap<String, ArrayList<String>>> paletteConfigList = (List<LinkedHashMap<String, ArrayList<String>>>) Reference.getInstance().getHideAndSeek().getConfig()
+					.getList("palettes");
 			SeekLog.info("Found : " + paletteConfigList);
 
 			for (LinkedHashMap<String, ArrayList<String>> list : paletteConfigList) {
@@ -75,5 +75,16 @@ public class Palettes {
 
 	public static BlockPalette getPalette(String name) {
 		return PALETTES.get(name);
+	}
+
+	/**
+	 * @param name
+	 * @return Whether the named {@link BlockPalette} exists
+	 */
+	public static boolean exists(String name) {
+		if (PALETTES.keySet().contains(name.toLowerCase().replace(" ", "_"))) {
+			return true;
+		}
+		return false;
 	}
 }

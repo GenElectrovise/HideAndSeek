@@ -38,7 +38,12 @@ public class Games {
 	}
 
 	public static Game newGame(GameData data) {
-		
+
+		return null;
+	}
+
+	public static Game newGame(Location loc, String paletteName) {
+
 		return null;
 	}
 
@@ -66,15 +71,15 @@ public class Games {
 		double smallest = Collections.min(distances.keySet());
 		return distances.get(new Double(smallest));
 	}
-	
+
 	public static final void createGamesTickCycle() {
 		Bukkit.getScheduler().scheduleSyncRepeatingTask(Reference.getInstance().getHideAndSeek(), new Runnable() {
-			
+
 			@Override
 			public void run() {
 				HideAndSeekTickGamesEvent tickGamesEvent = new HideAndSeekTickGamesEvent();
 				Bukkit.getServer().getPluginManager().callEvent(tickGamesEvent);
-				
+
 			}
 		}, 0, 20L);
 	}
