@@ -39,19 +39,19 @@ public class CmdNewGame implements CommandExecutor {
 	public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
 
 		// If no arguments, fail
-		if (args[0] == null) {
+		if (args.length < 1) {
 			return false;
 		}
 
 		// If too many arguments
-		if (args[4] != null) {
+		if (args.length > 4) {
 			sender.sendMessage("Woah, woah, woah! Hold it! That's too many arguments! You have put " + args.length + " arguments, of a maximum of 4!");
 			return false;
 		}
 
 		// If the palette does not exist, fail
 		if (!Palettes.exists(args[0])) {
-			sender.sendMessage("The block palette " + args[0] + "does not exist in HideAndSeek's config.yml, or is invalid!");
+			sender.sendMessage("The block palette " + args[0] + " does not exist in HideAndSeek's config.yml, or is invalid!");
 			return false;
 		}
 
@@ -62,7 +62,7 @@ public class CmdNewGame implements CommandExecutor {
 			Location location = null;
 
 			// If all coordinates populated
-			if (args[1] != null && args[2] != null && args[2] != null) {
+			if (args.length == 4) {
 				Integer locX = null;
 				Integer locY = null;
 				Integer locZ = null;
@@ -118,19 +118,20 @@ public class CmdNewGame implements CommandExecutor {
 			// If NOT all of the coordinate arguments are populated
 			else {
 				int p = 0;
-				if (args[1] != null) {
+				if (args.length == 2) {
 					p++;
 				}
-				if (args[2] != null) {
+				if (args.length == 3) {
 					p++;
 				}
-				if (args[3] != null) {
+				if (args.length == 4) {
 					p++;
 				}
 
 				// If only some arguments populated
 				if (p < 3 && p > 0) {
 					sender.sendMessage("Coordinate arguments are only semi-complete! Please fill all arguments or do not specify coordinates (Command will use your current position!)");
+					return false;
 				}
 				// If no coordinates specified
 				if (p == 0) {
@@ -146,7 +147,7 @@ public class CmdNewGame implements CommandExecutor {
 		// If not sent by a Player
 		else {
 			// If any required arguments are null, fail.
-			if (args[0] == null || args[1] == null || args[2] == null || args[3] == null) {
+			if (args.length < 4) {
 				return false;
 			}
 			// Otherwise construct location.

@@ -29,6 +29,8 @@ public final class HideAndSeek extends JavaPlugin {
 
 	@Override
 	public void onEnable() {
+		saveDefaultConfig();
+		
 		new Reference();
 		Reference.getInstance().setHideAndSeek(this);
 		Reference.getInstance().setCommandRegistry(new CommandRegistry());
@@ -41,12 +43,10 @@ public final class HideAndSeek extends JavaPlugin {
 		SeekLog.error("Error!");
 		
 		enableHandler.handleEnable();
-		
-		saveDefaultConfig();
 	}
 
 	@Override
 	public void onDisable() {
-		
+		enableHandler.handleDisable();
 	}
 }

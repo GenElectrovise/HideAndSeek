@@ -35,14 +35,15 @@ public class Games {
 	public static NPC newGame(Location loc, String paletteName) {
 		NPC npc = CitizensAPI.getNPCRegistry().createNPC(EntityType.PLAYER, "Hide and Seek Master");
 		npc.spawn(loc);
+		npc.addTrait(TraitGameController.class);
 		ACTIVE_GAMES.add(npc);
 		return npc;
 	}
 
-	public static Game nearestGame(Location l) {
+	public static TraitGameController nearestGameController(Location l) {
 		SeekLog.debug("Coords to find nearest game to : " + l.toString());
 
-		HashMap<Double, Game> distances = new HashMap<Double, Game>();
+		HashMap<Double, TraitGameController> distances = new HashMap<Double, TraitGameController>();
 		for (NPC npc : ACTIVE_GAMES) {
 			if (npc.hasTrait(TraitGameController.class)) {
 				Game game = npc.getTrait(TraitGameController.class).getGame();
@@ -60,11 +61,13 @@ public class Games {
 				double heightDifference = l.getY() - g.getY();
 				double verticalHyp = Math.sqrt((heightDifference * heightDifference) + (distPt3BToC * distPt3BToC));
 
-				distances.put(verticalHyp, game);
+				distances.put(verticalHyp, npc.getTrait(TraitGameController.class));
 
 			}
 		}
 
+		SeekLog.debug("Distances : " + distances.keySet().toString());
+		SeekLog.debug("ACTIVE_GAMES : " + ACTIVE_GAMES);
 		double smallest = Collections.min(distances.keySet());
 		return distances.get(new Double(smallest));
 	}
@@ -79,5 +82,15 @@ public class Games {
 
 			}
 		}, 0, 20L);
+	}
+
+	/**
+	 * @param traitGameController
+	 */
+	public static void destroyGameObj(TraitGameController traitGameController) {
+		ACTIVE_GAMES.remove(traitGameController.getNPC());
+		for (PlayerData data : traitGameController.getGame().players.values()) {
+			ACTIVE_PLAYERS.remove(data.getHost());
+		}
 	}
 }

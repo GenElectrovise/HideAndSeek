@@ -95,7 +95,7 @@ public class TraitNitwit extends Trait {
 	 */
 	@Override
 	public void onAttach() {
-		plugin.getServer().getLogger().info(npc.getName() + "has been assigned Nitwit!");
+		plugin.getServer().getLogger().info(npc.getName() + " has been assigned Nitwit!");
 	}
 
 	/**

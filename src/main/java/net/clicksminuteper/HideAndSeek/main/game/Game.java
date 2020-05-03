@@ -37,12 +37,15 @@ public class Game {
 	public GameData gamedata;
 
 	/**
-	 * Runs and contains data for a {@link Game}. Controlled by a {@link TraitGameController}.
-	 * @param traitGameController The enclosing {@link TraitGameController} which owns this {@link Game}
+	 * Runs and contains data for a {@link Game}. Controlled by a
+	 * {@link TraitGameController}.
+	 * 
+	 * @param traitGameController The enclosing {@link TraitGameController} which
+	 *                            owns this {@link Game}
 	 */
 	public Game(TraitGameController traitGameController) {
 		this.gameController = traitGameController;
-		SeekLog.info("New Game created by NPC at " + gameController.getNPC().getEntity().getLocation());
+		SeekLog.info("New Game created by NPC");
 	}
 
 	public void run() {
@@ -160,6 +163,6 @@ public class Game {
 
 	public void addPlayer(Player player) {
 		// TODO Auto-generated method stub
-		
+
 	}
 }

@@ -25,6 +25,7 @@ import org.bukkit.entity.Player;
 
 import net.citizensnpcs.api.CitizensAPI;
 import net.citizensnpcs.api.npc.NPC;
+import net.clicksminuteper.HideAndSeek.main.citizens.trait.TraitNitwit;
 
 /**
  * @author GenElectrovise
@@ -37,6 +38,7 @@ public class CmdNitwit implements CommandExecutor {
 		if (sender instanceof Player) {
 			Player player = (Player) sender;
 			NPC nitwit = CitizensAPI.getNPCRegistry().createNPC(EntityType.PLAYER, "Nitwit");
+			nitwit.addTrait(TraitNitwit.class);
 			nitwit.spawn(player.getLocation());
 			return true;
 		}

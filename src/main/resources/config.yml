@@ -7,3 +7,10 @@ palettes:
    - JUKEBOX
    - CARVED_PUMPKIN
    - GOLD_ORE
+games:
+   example:
+      worldName: world
+      x: 0
+      y: 60
+      z: 0
+      palette: genelectrovise

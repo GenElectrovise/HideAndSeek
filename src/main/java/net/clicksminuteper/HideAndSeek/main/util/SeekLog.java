@@ -31,9 +31,9 @@ public class SeekLog {
 		StackTraceElement[] stackTraceElements = Thread.currentThread().getStackTrace();
 
 		// [0] is most recent in stack
-		String className = stackTraceElements[2].getFileName();
-		int lineNumber = stackTraceElements[2].getLineNumber();
-		String methodName = stackTraceElements[2].getMethodName();
+		String className = stackTraceElements[3].getFileName();
+		int lineNumber = stackTraceElements[3].getLineNumber();
+		String methodName = stackTraceElements[3].getMethodName();
 
 		String out = ("{" + className) + (" | " + lineNumber) + (" | " + methodName + "}");
 
@@ -83,5 +83,14 @@ public class SeekLog {
 	 */
 	public static void setLogger(Logger logger) {
 		SeekLog.logger = logger;
+	}
+
+	/**
+	 * @param e
+	 */
+	public static void exception(Exception e) {
+		logger.severe("[EXCEPTION!] " + e.getMessage());
+		logger.severe("[EXCEPTION!] " + e.getCause());
+		SeekLog.stacktrace(e.getStackTrace());
 	}
 }

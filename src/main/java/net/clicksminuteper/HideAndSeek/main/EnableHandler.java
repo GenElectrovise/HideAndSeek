@@ -39,7 +39,7 @@ import net.clicksminuteper.HideAndSeek.main.util.SeekLog;
 public class EnableHandler {
 
 	public void handleEnable() {
-		SeekLog.info("HideAndSeek.onEnable() : HideAndSeek Plugin is enabled ...");
+		SeekLog.info("HideAndSeek plugin enabling with debug logging : " + (SeekLog.debubEnabled ? "on" : "off") + " (" + SeekLog.debubEnabled + ")");
 
 		// Generate BlockPalettes from config
 		Palettes.generatePalettes();
@@ -47,11 +47,73 @@ public class EnableHandler {
 		// Ensure Citizens is properly enabled, then registers Traits.
 		citizens();
 
+		// Add GameControllers
+		loadGameControllersFromConfig();
+
 		// Add commands
 		CommandRegistry.prepare();
 
 		// Start the game ticking cycle
 		activeGameTickingCycle();
+	}
+
+	/**
+	 * Reads config.yml to find active GameControllers in the world.
+	 */
+	private void loadGameControllersFromConfig() {
+		/*
+		 * ArrayList<UUID> uuids = new ArrayList<UUID>(); ArrayList<NPC> npcs = new
+		 * ArrayList<NPC>();
+		 * 
+		 * SeekLog.debug("Loading game controllers...");
+		 * 
+		 * // Get all entities with the NPC metadata tag for (World world :
+		 * Bukkit.getWorlds()) { SeekLog.debug("World : " + world.getName());
+		 * 
+		 * for (Entity entity : world.getEntities()) { SeekLog.debug(" - " +
+		 * entity.getName());
+		 * 
+		 * if (entity.hasMetadata("NPC")) { SeekLog.debug("Entity had metadata NPC : " +
+		 * entity.getLocation()); SeekLog.debug("Added UUID : " + entity.getUniqueId());
+		 * uuids.add(entity.getUniqueId()); } } }
+		 * 
+		 * // For every NPCRegistry, add any UUIDs contained in it belonging to NPCs for
+		 * (NPCRegistry registry : CitizensAPI.getNPCRegistries()) {
+		 * SeekLog.debug("Registry : " + registry.toString());
+		 * 
+		 * for (UUID uuid : uuids) { SeekLog.debug("UUID : " + uuid);
+		 * 
+		 * if (registry.getByUniqueId(uuid) != null) { NPC npc =
+		 * registry.getByUniqueId(uuid); SeekLog.debug("NPC : " + npc.getFullName() +
+		 * " at " + npc.getEntity().getLocation());
+		 * 
+		 * if (npc.hasTrait(TraitGameController.class)) { npcs.add(npc);
+		 * SeekLog.debug("Added game controller at " + npc.getEntity().getLocation()); }
+		 * else { SeekLog.debug("Did not add npc at " + npc.getEntity().getLocation());
+		 * } } } }
+		 */
+		
+		
+		
+		/*
+		 * SeekLog.info("Finding game controllers..."); FileConfiguration config =
+		 * Reference.getInstance().getHideAndSeek().getConfig();
+		 * 
+		 * ConfigurationSection games = config.getConfigurationSection("games");
+		 * 
+		 * for (String gameName : games.getKeys(false)) { ConfigurationSection
+		 * gameSection = games.getConfigurationSection(gameName);
+		 * 
+		 * String worldName = gameSection.getString("worldName");
+		 * SeekLog.debug(" - worldName : " + worldName); Integer x =
+		 * gameSection.getInt("x"); SeekLog.debug(" - x : " + x); Integer y =
+		 * gameSection.getInt("y"); SeekLog.debug(" - y : " + y); Integer z =
+		 * gameSection.getInt("z"); SeekLog.debug(" - z : " + z); String palette =
+		 * gameSection.getString("palette"); SeekLog.debug(" - palette : " + palette);
+		 * 
+		 * Games.newGame(new Location(Bukkit.getWorld(worldName), x, y, z), palette); }
+		 */
+
 	}
 
 	/**
@@ -66,9 +128,8 @@ public class EnableHandler {
 				Games.createGamesTickCycle();
 			}
 		};
-		SeekLog.debug("Created repeatable task : " + startTickCycle);
+		SeekLog.debug("Will begin GamesTickCycle in 20 seconds");
 		startTickCycle.runTaskLater(Reference.getInstance().getHideAndSeek(), 200L);
-		SeekLog.debug("Running game tick cycle!");
 	}
 
 	/**
@@ -88,5 +149,29 @@ public class EnableHandler {
 
 	public void handleDisable() {
 		SeekLog.info("HideAndSeek.onDisable() : HideAndSeek Plugin has been disabled ...");
+
+		/*
+		 * // Save GameController locations for (NPC npc : Games.ACTIVE_GAMES) {
+		 * SeekLog.debug("Saving game controller at " + npc.getEntity().getLocation());
+		 * String gameName = npc.getTrait(TraitGameController.class).getGameName();
+		 * String worldName = npc.getEntity().getLocation().getWorld().getName();
+		 * Integer x = npc.getEntity().getLocation().getBlockX(); Integer y =
+		 * npc.getEntity().getLocation().getBlockX(); Integer z =
+		 * npc.getEntity().getLocation().getBlockX(); String palette =
+		 * npc.getEntity().getLocation().getWorld().getName();
+		 * 
+		 * FileConfiguration config =
+		 * Reference.getInstance().getHideAndSeek().getConfig(); config.set("games." +
+		 * gameName + ".worldName", worldName); config.set("games." + gameName + ".x",
+		 * x); config.set("games." + gameName + ".y", y); config.set("games." + gameName
+		 * + ".z", z); config.set("games." + gameName + ".palette", palette);
+		 * 
+		 * SeekLog.debug(" - worldName : " + worldName); SeekLog.debug(" - x : " + x);
+		 * SeekLog.debug(" - y : " + y); SeekLog.debug(" - z : " + z);
+		 * SeekLog.debug(" - palette : " + palette); }
+		 * 
+		 * // Destroy all Games if (Games.ACTIVE_GAMES.size() > 0) { for (NPC npc :
+		 * Games.ACTIVE_GAMES) { npc.destroy(); } }
+		 */
 	}
 }

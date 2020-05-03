@@ -20,8 +20,6 @@ package net.clicksminuteper.HideAndSeek.main.event;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 
-import net.clicksminuteper.HideAndSeek.main.util.SeekLog;
-
 /**
  * @author GenElectrovise
  *
@@ -31,7 +29,7 @@ public class HideAndSeekTickGamesEvent extends Event {
 	private static final HandlerList handlers = new HandlerList();
 
 	public HideAndSeekTickGamesEvent() {
-		SeekLog.debug("HideAndSeekTickGamesEvent");
+		//SeekLog.debug("HideAndSeekTickGamesEvent");
 	}
 
 	@Override

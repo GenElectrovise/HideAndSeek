@@ -57,7 +57,7 @@ public class PlayerDeathListener implements Listener {
 				double pY = player.getLocation().getY();
 				double pZ = player.getLocation().getZ();
 
-				Game nearestGame = Games.nearestGame(new Location(player.getWorld(), pX, pY, pZ));
+				Game nearestGame = Games.nearestGameController(new Location(player.getWorld(), pX, pY, pZ)).getGame();
 				SeekLog.info("Nearest game is at " + nearestGame.gamedata.getOrigin().getX() + ","
 						+ nearestGame.gamedata.getOrigin().getZ());
 

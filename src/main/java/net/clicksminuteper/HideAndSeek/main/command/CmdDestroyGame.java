@@ -22,13 +22,13 @@ import org.bukkit.Location;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
 
 import net.clicksminuteper.HideAndSeek.main.game.Games;
 
 /**
  * Destroys the Game at the given Locations, or the nearest Game to those if a
- * Game is not present at those Locations
+ * Game is not present at those Locations. <br>
+ * Usage: <b><i>/destroygame X Y Z</i></b>
  * 
  * @author GenElectrovise
  *
@@ -37,27 +37,31 @@ public class CmdDestroyGame implements CommandExecutor {
 
 	@Override
 	public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-		int gameX;
-		int gameY;
-		int gameZ;
-
-		if (!(sender instanceof Player)) {
+		if (args.length != 3) {
+			sender.sendMessage("Incorrect number of arguments! (" + args.length + " of necessary 3)");
 			return false;
 		}
-
-		Player player = (Player) sender;
 
 		try {
-			gameX = new Integer(args[0]);
-			gameY = new Integer(args[1]);
-			gameZ = new Integer(args[2]);
-		} catch (ClassCastException c) {
-			sender.sendMessage("Incorrect args for command!");
+			Integer iX;
+			Integer iY;
+			Integer iZ;
+
+			iX = new Integer(args[0]);
+			iY = new Integer(args[1]);
+			iZ = new Integer(args[2]);
+
+			Location location = new Location(null, iX, iY, iZ);
+
+			
+			if (Games.nearestGameController(location).destroy()) {
+				return true;
+			}
+
+		} catch (NumberFormatException e) {
+			sender.sendMessage("One argument passed cannot be parsed to an integer.");
 			return false;
 		}
-
-		if (Games.nearestGame(new Location(player.getWorld(), gameX, gameY, gameZ)).destroy())
-			return true;
 
 		return false;
 	}
