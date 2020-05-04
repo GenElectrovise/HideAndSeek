@@ -17,16 +17,20 @@
  */
 package net.clicksminuteper.HideAndSeek.main.citizens.trait;
 
+import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import net.citizensnpcs.api.event.DespawnReason;
 import net.citizensnpcs.api.event.NPCRightClickEvent;
+import net.citizensnpcs.api.npc.NPC;
 import net.citizensnpcs.api.trait.Trait;
 import net.clicksminuteper.HideAndSeek.main.HideAndSeek;
 import net.clicksminuteper.HideAndSeek.main.event.HideAndSeekTickGamesEvent;
 import net.clicksminuteper.HideAndSeek.main.game.Game;
 import net.clicksminuteper.HideAndSeek.main.game.Games;
+import net.clicksminuteper.HideAndSeek.main.game.block.BlockPalette;
 import net.clicksminuteper.HideAndSeek.main.util.SeekLog;
 
 /**
@@ -37,10 +41,10 @@ public class TraitGameController extends Trait {
 
 	private Game game;
 	private JavaPlugin plugin;
+	private BlockPalette palette;
 
 	public TraitGameController() {
 		super("hns_gamecontroller");
-		this.game = new Game(this);
 		this.plugin = JavaPlugin.getPlugin(HideAndSeek.class);
 	}
 
@@ -51,13 +55,35 @@ public class TraitGameController extends Trait {
 		return game;
 	}
 
+	/**
+	 * Listens for a {@link HideAndSeekTickGamesEvent}. When heard, ticks this
+	 * {@link TraitGameController}'s {@link Game}
+	 * 
+	 * @param event
+	 */
 	@EventHandler
 	public void listenForGameTick(HideAndSeekTickGamesEvent event) {
 		SeekLog.debug("Game controller heard TickGamesEvent!");
+		if (hasGame()) {
+			game.tick();
+		}
 	}
 
 	/**
-	 * @return
+	 * @return Whether this {@link TraitGameController} has a {@link Game}
+	 */
+	private boolean hasGame() {
+		if (getGame() != null) {
+			return true;
+		}
+		return false;
+	}
+
+	/**
+	 * Destroys all assets for this {@link TraitGameController}, including its host
+	 * {@link NPC} and contained {@link Game}.
+	 * 
+	 * @return Whether the destruction was successful.
 	 */
 	public boolean destroy() {
 		try {
@@ -85,6 +111,15 @@ public class TraitGameController extends Trait {
 
 	}
 
+	@EventHandler
+	public void playerDisconnected(PlayerQuitEvent event) {
+		if (game.getPlayers().containsKey(event.getPlayer().getName())) {
+			SeekLog.info("Player " + event.getPlayer().getName() + " disconnected so was removed from the Game at " + getNPC().getEntity().getLocation() + "! Why did they want to play....?");
+			game.removePlayer(event.getPlayer().getName());
+			game.teleportPlayerToExternalLobby(event.getPlayer());
+		}
+	}
+
 	// Called every tick
 	@Override
 	public void run() {
@@ -108,6 +143,8 @@ public class TraitGameController extends Trait {
 	@Override
 	public void onDespawn() {
 		SeekLog.info("Game Controller has despawned");
+		game.destroy();
+		this.game = null;
 	}
 
 	/**
@@ -118,7 +155,7 @@ public class TraitGameController extends Trait {
 	@Override
 	public void onSpawn() {
 		this.game = new Game(this);
-		SeekLog.info("Game Controller has spawned");
+		SeekLog.info("NPC with TraitGameController has spawned. New Game attached");
 	}
 
 	/**
@@ -127,5 +164,45 @@ public class TraitGameController extends Trait {
 	@Override
 	public void onRemove() {
 		SeekLog.info("Game Controller removed");
+	}
+
+	@Override
+	public String toString() {
+		return "//TODO! New toString() for TraitGameController" + super.toString();
+	}
+
+	/**
+	 * @return the palette
+	 */
+	public BlockPalette getPalette() {
+		return palette;
+	}
+
+	/**
+	 * @param palette the palette to set
+	 */
+	public void setPalette(BlockPalette palette) {
+		this.palette = palette;
+	}
+
+	/**
+	 * @param game the game to set
+	 */
+	public void setGame(Game game) {
+		this.game = game;
+	}
+
+	/**
+	 * @return the plugin
+	 */
+	public JavaPlugin getPlugin() {
+		return plugin;
+	}
+
+	/**
+	 * @param plugin the plugin to set
+	 */
+	public void setPlugin(JavaPlugin plugin) {
+		this.plugin = plugin;
 	}
 }

@@ -35,7 +35,7 @@ public class PlayerData {
 	public boolean isSeeker() {
 		return isSeeker;
 	}
-	
+
 	public void setSeeker(boolean isSeeker) {
 		this.isSeeker = isSeeker;
 	}

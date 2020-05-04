@@ -1,5 +1,6 @@
 lobbyDuration: 20
 gameDuration: 300
+finishDuration: 20
 debugEnabled: true
 palettes:
 -  genelectrovise:
@@ -14,3 +15,8 @@ games:
       y: 60
       z: 0
       palette: genelectrovise
+externalLobbyLocation:
+   worldName: world
+   x: 0
+   y: 100
+   z: 0

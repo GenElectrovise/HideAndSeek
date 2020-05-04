@@ -55,7 +55,7 @@ public class CmdJoin implements CommandExecutor {
 			}
 
 			Game nearestGame = Games.nearestGameController(pos).getGame();
-			if (nearestGame.canJoin) {
+			if (nearestGame.joinable) {
 				nearestGame.addPlayer(player);
 				player.sendMessage("Joining HideAndSeek!");
 				return true;

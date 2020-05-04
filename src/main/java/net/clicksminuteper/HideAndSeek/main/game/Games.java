@@ -14,6 +14,7 @@ import net.citizensnpcs.api.npc.NPC;
 import net.clicksminuteper.HideAndSeek.main.Reference;
 import net.clicksminuteper.HideAndSeek.main.citizens.trait.TraitGameController;
 import net.clicksminuteper.HideAndSeek.main.event.HideAndSeekTickGamesEvent;
+import net.clicksminuteper.HideAndSeek.main.game.block.Palettes;
 import net.clicksminuteper.HideAndSeek.main.util.SeekLog;
 
 public class Games {
@@ -36,6 +37,7 @@ public class Games {
 		NPC npc = CitizensAPI.getNPCRegistry().createNPC(EntityType.PLAYER, "Hide and Seek Master");
 		npc.spawn(loc);
 		npc.addTrait(TraitGameController.class);
+		npc.getTrait(TraitGameController.class).setPalette(Palettes.getPalette(paletteName));
 		ACTIVE_GAMES.add(npc);
 		return npc;
 	}
@@ -48,8 +50,7 @@ public class Games {
 			if (npc.hasTrait(TraitGameController.class)) {
 				Game game = npc.getTrait(TraitGameController.class).getGame();
 
-				GameData data = game.gamedata;
-				Location g = data.getOrigin();
+				Location g = game.getOrigin();
 				Location pt3 = new Location(g.getWorld(), g.getX(), l.getY(), l.getZ());
 
 				// Find horizontal hypotenuse
