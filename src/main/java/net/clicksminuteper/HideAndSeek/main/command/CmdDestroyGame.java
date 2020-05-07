@@ -28,7 +28,7 @@ import net.clicksminuteper.HideAndSeek.main.game.Games;
 /**
  * Destroys the Game at the given Locations, or the nearest Game to those if a
  * Game is not present at those Locations. <br>
- * Usage: <b><i>/destroygame X Y Z</i></b>
+ * Usage: <b><i>/destroygame (X Y Z) (message)</i></b>
  * 
  * @author GenElectrovise
  *
@@ -37,7 +37,7 @@ public class CmdDestroyGame implements CommandExecutor {
 
 	@Override
 	public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-		if (args.length != 3) {
+		if (args.length != 4 || args.length != 0 || args.length != 3) {
 			sender.sendMessage("Incorrect number of arguments! (" + args.length + " of necessary 3)");
 			return false;
 		}
