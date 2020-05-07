@@ -23,6 +23,8 @@ import org.bukkit.entity.Player;
 public class PlayerData {
 	private Player host;
 	private boolean isSeeker = false;
+	private boolean hasHadAcceleratedGameStartAnnounced = false;
+	private boolean hasHadWaitingForMorePlayersAnnounced = false;
 
 	public PlayerData(Player player) {
 		this.host = player;
@@ -38,5 +40,48 @@ public class PlayerData {
 
 	public void setSeeker(boolean isSeeker) {
 		this.isSeeker = isSeeker;
+	}
+
+	/**
+	 * @return the hasHadAcceleratedGameStartAnnounced
+	 */
+	public boolean hasHadAcceleratedGameStartAnnounced() {
+		return hasHadAcceleratedGameStartAnnounced;
+	}
+
+	/**
+	 * @param hasHadAcceleratedGameStartAnnounced the
+	 *                                            hasHadAcceleratedGameStartAnnounced
+	 *                                            to set
+	 */
+	public void setHasHadAcceleratedGameStartAnnounced(boolean hasHadAcceleratedGameStartAnnounced) {
+		this.hasHadAcceleratedGameStartAnnounced = hasHadAcceleratedGameStartAnnounced;
+	}
+	
+	/**
+	 * @return the hasHadWaitingForMorePlayersAnnounced
+	 */
+	public boolean hasHadWaitingForMorePlayersAnnounced() {
+		return hasHadWaitingForMorePlayersAnnounced;
+	}
+	
+	/**
+	 * @param hasHadWaitingForMorePlayersAnnounced the hasHadWaitingForMorePlayersAnnounced to set
+	 */
+	public void setHasHadWaitingForMorePlayersAnnounced(boolean hasHadWaitingForMorePlayersAnnounced) {
+		this.hasHadWaitingForMorePlayersAnnounced = hasHadWaitingForMorePlayersAnnounced;
+	}
+
+	@Override
+	public String toString() {
+		StringBuilder builder = new StringBuilder();
+		builder.append("PlayerData{");
+
+		builder.append("HostName:" + host.getName());
+		builder.append(" isSeeker:" + isSeeker);
+		builder.append(" hasHadAcceleratedGameStartAnnounced:" + hasHadAcceleratedGameStartAnnounced);
+
+		builder.append("}");
+		return builder.toString();
 	}
 }

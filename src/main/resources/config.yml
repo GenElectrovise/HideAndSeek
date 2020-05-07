@@ -2,19 +2,13 @@ lobbyDuration: 20
 gameDuration: 300
 finishDuration: 20
 debugEnabled: true
+minimumPlayers: 2
 palettes:
 -  genelectrovise:
    - DIAMOND_BLOCK
    - JUKEBOX
    - CARVED_PUMPKIN
    - GOLD_ORE
-games:
-   example:
-      worldName: world
-      x: 0
-      y: 60
-      z: 0
-      palette: genelectrovise
 externalLobbyLocation:
    worldName: world
    x: 0

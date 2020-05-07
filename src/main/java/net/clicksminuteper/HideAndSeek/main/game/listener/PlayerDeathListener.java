@@ -58,8 +58,8 @@ public class PlayerDeathListener implements Listener {
 				double pZ = player.getLocation().getZ();
 
 				Game nearestGame = Games.nearestGameController(new Location(player.getWorld(), pX, pY, pZ)).getGame();
-				SeekLog.info("Nearest game is at " + nearestGame.gamedata.getOrigin().getX() + ","
-						+ nearestGame.gamedata.getOrigin().getZ());
+				SeekLog.info("Nearest game is at " + nearestGame.getOrigin().getX() + ","
+						+ nearestGame.getOrigin().getZ());
 
 				if (nearestGame.players.get(player.getName()) != null) {
 					SeekLog.info("Player is participating in that game!");
@@ -73,8 +73,8 @@ public class PlayerDeathListener implements Listener {
 					LibsInterface.cmdUndisguise(player);
 
 					Bukkit.dispatchCommand(Bukkit.getConsoleSender(),
-							"tp " + player.getName() + " " + nearestGame.gamedata.getOrigin().getX() + " "
-									+ nearestGame.gamedata.getOrigin().getY() + " " + nearestGame.gamedata.getOrigin().getZ());
+							"tp " + player.getName() + " " + nearestGame.getOrigin().getX() + " "
+									+ nearestGame.getOrigin().getY() + " " + nearestGame.getOrigin().getZ());
 					player.sendMessage("You are a seeker! Have some seeker items!");
 
 					player.getInventory().clear();

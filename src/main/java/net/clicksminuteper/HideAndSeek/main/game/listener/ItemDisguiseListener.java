@@ -52,7 +52,7 @@ public class ItemDisguiseListener implements Listener {
 				Game nearestGame = Games.nearestGameController(new Location(player.getWorld(), player.getLocation().getX(),
 						player.getLocation().getY(), (player.getLocation().getZ()))).getGame();
 
-				BlockPalette palette = nearestGame.gamedata.getPalette();
+				BlockPalette palette = nearestGame.getPalette();
 
 				SeekLog.info(palette.toString());
 

@@ -25,7 +25,7 @@ import net.clicksminuteper.HideAndSeek.main.Reference;
 public class SeekLog {
 
 	protected static Logger logger;
-	public static boolean debubEnabled = Reference.getInstance().getHideAndSeek().getConfig().getBoolean("debugEnabled");
+	public static boolean debugEnabled = Reference.getInstance().getHideAndSeek().getConfig().getBoolean("debugEnabled");
 
 	private static String getLastInStack() {
 		StackTraceElement[] stackTraceElements = Thread.currentThread().getStackTrace();
@@ -53,7 +53,7 @@ public class SeekLog {
 	}
 
 	public static void debug(String msg) {
-		if (debubEnabled) {
+		if (debugEnabled) {
 			logger.info("[DEBUG] " + getLastInStack() + " : " + msg);
 		}
 	}

@@ -62,9 +62,19 @@ public class Game {
 		this.palette = traitGameController.getPalette();
 		this.gameConfig = new GameConfig();
 		this.timer = new GameTimer(gameConfig.GAME_DURATION + gameConfig.LOBBY_DURATION + gameConfig.FINISH_DURATION);
-		this.gameState = GameState.UNINITIALISED;
+		this.setGameState(GameState.UNINITIALISED);
 
-		SeekLog.info("New Game created by NPC >> " + toString());
+		SeekLog.debug("Game " + this);
+		SeekLog.debug("Game Controller " + gameController);
+		SeekLog.debug("Players " + players);
+		SeekLog.debug("Joinable? " + false);
+		SeekLog.debug("Origin " + origin);
+		SeekLog.debug("BlockPalette " + palette);
+		SeekLog.debug("GameTimer " + timer);
+		SeekLog.debug("GameConfig " + gameConfig);
+		SeekLog.debug("GameState " + gameState);
+
+		SeekLog.info("New Game created by NPC: " + toString());
 	}
 
 	/**
@@ -77,25 +87,36 @@ public class Game {
 
 		switch (gameState) {
 		case UNINITIALISED:
-			gameState = GameState.JOINING;
+			SeekLog.debug("GameState == UNINITIALIED > JOINING");
+			setGameState(GameState.JOINING);
 			setJoinable(false);
+			gameController.prepareInventoryByState(gameState);
 			break;
 
 		case JOINING:
+			SeekLog.debug("GameState == JOINING");
 			setJoinable(true);
 			joining();
+			gameController.prepareInventoryByState(gameState);
 			break;
 
 		case PLAYING:
+			SeekLog.debug("GameState == PLAYING");
 			setJoinable(false);
+			playing();
+			gameController.prepareInventoryByState(gameState);
 			break;
 
 		case FINISHED:
+			SeekLog.debug("GameState == FINISHED");
 			setJoinable(false);
+			finished();
+			gameController.prepareInventoryByState(gameState);
 			break;
 
 		default:
-			gameState = GameState.UNINITIALISED;
+			SeekLog.debug("GameState == DEFAULT > UNINITIALISED");
+			setGameState(GameState.UNINITIALISED);
 			setJoinable(false);
 			break;
 		}
@@ -107,10 +128,89 @@ public class Game {
 	 * Handles the <code>{@link GameState}.JOINING</code> phase of this Game
 	 */
 	private void joining() {
+		SeekLog.debug("Players now JOINING");
+
 		for (PlayerData data : players.values()) {
+			SeekLog.debug("Setting " + data.getHost().getName() + "'s exp levels to " + (timer.totalDuration - timer.timeRemaining));
 			Player player = data.getHost();
 			player.setLevel(timer.totalDuration - timer.timeRemaining);
 		}
+
+		boolean shouldAnnounceAcceleratedGameStart = false;
+		boolean shouldAnnounceWaitingForMorePlayers = false;
+
+		// If the playing players is at least the minimum size, accelerate the game
+		// start.
+		if (players.values().size() >= gameConfig.MINIMUM_PLAYERS) {
+			timer.decr();
+			shouldAnnounceAcceleratedGameStart = true;
+		} else {
+			timer.reset();
+			shouldAnnounceWaitingForMorePlayers = true;
+		}
+
+		// If shouldAnnounceAcceleratedGameStart, announce to all players who haven't
+		// already been announced to
+		if (shouldAnnounceAcceleratedGameStart) {
+			for (PlayerData data : players.values()) {
+				if (!data.hasHadAcceleratedGameStartAnnounced()) {
+					data.getHost().sendTitle("Hide and Seek", "Enough players have joined! Game starting soon!", 20, 100, 20);
+					data.setHasHadAcceleratedGameStartAnnounced(true);
+				}
+			}
+		} else { // Otherwise set all hasBeenAnnouncedTo to false
+			for (PlayerData data : players.values()) {
+				data.setHasHadAcceleratedGameStartAnnounced(false);
+			}
+		}
+
+		// If shouldAnnounceWaitingForMorePlayers, announce to all players who haven't
+		// already been announced to
+		if (shouldAnnounceWaitingForMorePlayers) {
+			for (PlayerData data : players.values()) {
+				if (!data.hasHadWaitingForMorePlayersAnnounced()) {
+					data.getHost().sendTitle("Hide and Seek", "Not enough players! Game start delayed...", 20, 100, 20);
+					data.setHasHadWaitingForMorePlayersAnnounced(true);
+				}
+			}
+		} else {
+			for (PlayerData data : players.values()) {
+				data.setHasHadWaitingForMorePlayersAnnounced(false);
+			}
+		}
+
+		// If the timer is in the last five seconds and there aren't enough players,
+		// reset the timer and apologise.
+		if (timer.timeRemaining < gameConfig.GAME_DURATION + gameConfig.FINISH_DURATION + 5) {
+			if (players.size() < gameConfig.MINIMUM_PLAYERS) {
+				timer.reset();
+				for (PlayerData data : players.values()) {
+					data.getHost().sendTitle("Hide and Seek", "We don't have enough players! Game start postponed!", 20, 100, 20);
+				}
+			}
+		}
+	}
+
+	private void playing() {
+		SeekLog.error("No playing behavior");
+
+		// Tally up all remaining hiders
+		int hiderTally = 0;
+		for (PlayerData data : players.values()) {
+			if (!data.isSeeker()) {
+				hiderTally++;
+			}
+		}
+		SeekLog.debug("hiderTally: " + hiderTally);
+		// If total hiders == 0, change the gameState to GameState.FINISHED, as there
+		// are no hiders remaining.
+		if (hiderTally == 0) {
+			setGameState(GameState.FINISHED);
+		}
+	}
+
+	private void finished() {
+		SeekLog.error("No finished behavior");
 	}
 
 	/**
@@ -118,16 +218,18 @@ public class Game {
 	 * remaining.
 	 */
 	private void changeGameState() {
-		if (timer.timeRemaining > gameConfig.GAME_DURATION + gameConfig.FINISH_DURATION) {
-			gameState = GameState.JOINING;
-		} else if (timer.timeRemaining > gameConfig.FINISH_DURATION && timer.timeRemaining < timer.totalDuration - gameConfig.LOBBY_DURATION) {
-			gameState = GameState.PLAYING;
-		} else if (timer.timeRemaining < gameConfig.FINISH_DURATION && timer.timeRemaining > 0) {
-			gameState = GameState.FINISHED;
-		} else if (timer.timeRemaining == 0 || timer.timeRemaining < 0) {
+		SeekLog.debug("Changing GamesState based on GameTimer " + timer);
+
+		if (timer.timeRemaining < 1) {
 			reset();
+		} else if (timer.timeRemaining > gameConfig.GAME_DURATION + gameConfig.FINISH_DURATION || players.values().size() < 3) {
+			setGameState(GameState.JOINING);
+		} else if (timer.timeRemaining > gameConfig.FINISH_DURATION) {
+			setGameState(GameState.PLAYING);
+		} else if (timer.timeRemaining <= gameConfig.FINISH_DURATION) {
+			setGameState(GameState.FINISHED);
 		} else {
-			SeekLog.error("Unhandled case in changing state!" + timer);
+			SeekLog.error("Unhandled case while changing GameState! Using GameTime + " + timer);
 		}
 	}
 
@@ -136,7 +238,7 @@ public class Game {
 	 * {@link GameTimer}
 	 */
 	private void reset() {
-		SeekLog.info("Resetting Game " + this);
+		SeekLog.info("Resetting GameTimer for Game: " + this);
 		for (String playerName : players.keySet()) {
 			removePlayer(playerName);
 		}
@@ -149,10 +251,14 @@ public class Game {
 	 * @return Whether the player was successfully added.
 	 */
 	public boolean addPlayer(Player player) {
+		SeekLog.debug("Trying to add Player " + player.getName());
 		if (isJoinable()) {
+			SeekLog.debug(" - Game is joinable");
 			players.put(player.getName(), new PlayerData(player));
+			SeekLog.debug(" - Added " + player.getName());
 			return true;
 		}
+		SeekLog.debug(" - Game not joinable");
 		return false;
 	}
 
@@ -177,14 +283,11 @@ public class Game {
 	public boolean removePlayer(String playerName) {
 		try {
 			players.remove(playerName);
+			SeekLog.debug("Removed Player " + playerName);
 
 			if (gameState == GameState.PLAYING || gameState == GameState.FINISHED) {
-				FileConfiguration config = Reference.getInstance().getHideAndSeek().getConfig();
-				ConfigurationSection configSection = config.getConfigurationSection("externalLobbyLocation");
-				Bukkit.getPlayer(playerName).getLocation().setWorld(Bukkit.getWorld(configSection.getString("worldName")));
-				Bukkit.getPlayer(playerName).getLocation().setX(configSection.getInt("x"));
-				Bukkit.getPlayer(playerName).getLocation().setY(configSection.getInt("y"));
-				Bukkit.getPlayer(playerName).getLocation().setZ(configSection.getInt("z"));
+				SeekLog.debug("GameState is " + gameState);
+				teleportPlayerToExternalLobby(Bukkit.getPlayer(playerName));
 			}
 
 			return true;
@@ -205,9 +308,13 @@ public class Game {
 	 * @return Whether the destruction was successful.
 	 */
 	public boolean destroy() {
+		SeekLog.debug("Destroying Game.");
+		SeekLog.debug(" - Handling Players");
 		try {
 			for (PlayerData data : players.values()) {
 				Player player = data.getHost();
+				SeekLog.debug("Handling Player " + player.getName());
+
 				teleportPlayerToExternalLobby(player);
 				removePlayer(player);
 			}
@@ -220,11 +327,24 @@ public class Game {
 
 	public void teleportPlayerToExternalLobby(Player player) {
 		FileConfiguration config = Reference.getInstance().getHideAndSeek().getConfig();
+		SeekLog.debug("Teleported " + player.getName() + " to external Lobby at :");
 		ConfigurationSection configSection = config.getConfigurationSection("externalLobbyLocation");
-		player.getLocation().setWorld(Bukkit.getWorld(configSection.getString("worldName")));
-		player.getLocation().setX(configSection.getInt("x"));
-		player.getLocation().setY(configSection.getInt("y"));
-		player.getLocation().setZ(configSection.getInt("z"));
+		SeekLog.debug(" - External Lobby Location: ");
+
+		String worldName = configSection.getString("worldName");
+		int x = configSection.getInt("x");
+		int y = configSection.getInt("y");
+		int z = configSection.getInt("z");
+
+		SeekLog.debug(" - - World Name: " + worldName);
+		SeekLog.debug(" - - X: " + x);
+		SeekLog.debug(" - - Y: " + y);
+		SeekLog.debug(" - - Z: " + z);
+
+		player.getLocation().setWorld(Bukkit.getWorld(worldName));
+		player.getLocation().setX(x);
+		player.getLocation().setY(y);
+		player.getLocation().setZ(z);
 	}
 
 	@SuppressWarnings("unused")
@@ -304,9 +424,6 @@ public class Game {
 
 	// toString
 
-	/**
-	 * 
-	 */
 	@Override
 	public String toString() {
 		StringBuilder builder = new StringBuilder();
@@ -319,8 +436,12 @@ public class Game {
 			builder.append(data.getHost().getDisplayName() + ", ");
 		}
 		builder.append("]");
-		builder.append(" " + palette);
-		builder.append(" canJoin:" + joinable);
+		builder.append(" GameController:" + gameController);
+		builder.append(" BlockPalette: " + palette);
+		builder.append(" joinable:" + joinable);
+		builder.append(" GameTimer:" + timer);
+		builder.append(" GameConfig:" + gameConfig);
+		builder.append(" GameState:" + gameState);
 
 		builder.append("}");
 		return builder.toString();
@@ -404,6 +525,7 @@ public class Game {
 	 * @param gameState the gameState to set
 	 */
 	public void setGameState(GameState gameState) {
+		SeekLog.debug("Chaning GameState from " + this.gameState + " to " + gameState);
 		this.gameState = gameState;
 	}
 
@@ -457,6 +579,7 @@ public class Game {
 
 		public GameTimer(int totalDuration) {
 			this.totalDuration = totalDuration;
+			reset();
 		}
 
 		/**
@@ -511,7 +634,7 @@ public class Game {
 	 * @author GenElectrovise
 	 *
 	 */
-	public enum GameState {
+	public static enum GameState {
 		UNINITIALISED, JOINING, PLAYING, FINISHED;
 	}
 }

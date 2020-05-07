@@ -24,6 +24,7 @@ import org.bukkit.scheduler.BukkitRunnable;
 import net.citizensnpcs.api.CitizensAPI;
 import net.citizensnpcs.api.trait.TraitInfo;
 import net.clicksminuteper.HideAndSeek.main.citizens.trait.TraitGameController;
+import net.clicksminuteper.HideAndSeek.main.citizens.trait.TraitGameControllerInventory;
 import net.clicksminuteper.HideAndSeek.main.citizens.trait.TraitNitwit;
 import net.clicksminuteper.HideAndSeek.main.command.CommandRegistry;
 import net.clicksminuteper.HideAndSeek.main.game.Games;
@@ -39,7 +40,7 @@ import net.clicksminuteper.HideAndSeek.main.util.SeekLog;
 public class EnableHandler {
 
 	public void handleEnable() {
-		SeekLog.info("HideAndSeek plugin enabling with debug logging : " + (SeekLog.debubEnabled ? "on" : "off") + " (" + SeekLog.debubEnabled + ")");
+		SeekLog.info("HideAndSeek plugin enabling with debug logging : " + (SeekLog.debugEnabled ? "on" : "off") + " (" + SeekLog.debugEnabled + ")");
 
 		// Generate BlockPalettes from config
 		Palettes.generatePalettes();
@@ -145,6 +146,7 @@ public class EnableHandler {
 		// Register your trait with Citizens.
 		CitizensAPI.getTraitFactory().registerTrait(TraitInfo.create(TraitNitwit.class).withName("hns_nitwit"));
 		CitizensAPI.getTraitFactory().registerTrait(TraitInfo.create(TraitGameController.class).withName("hns_gamecontroller"));
+		CitizensAPI.getTraitFactory().registerTrait(TraitInfo.create(TraitGameControllerInventory.class).withName("hns_gamecontroller-inventory"));
 	}
 
 	public void handleDisable() {

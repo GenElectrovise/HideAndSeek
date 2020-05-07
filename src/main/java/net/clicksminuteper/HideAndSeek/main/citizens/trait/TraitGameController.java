@@ -17,7 +17,9 @@
  */
 package net.clicksminuteper.HideAndSeek.main.citizens.trait;
 
-import org.bukkit.configuration.file.FileConfiguration;
+import java.util.List;
+
+import org.bukkit.entity.Entity;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -26,9 +28,11 @@ import net.citizensnpcs.api.event.DespawnReason;
 import net.citizensnpcs.api.event.NPCRightClickEvent;
 import net.citizensnpcs.api.npc.NPC;
 import net.citizensnpcs.api.trait.Trait;
+import net.citizensnpcs.api.trait.trait.Inventory;
 import net.clicksminuteper.HideAndSeek.main.HideAndSeek;
 import net.clicksminuteper.HideAndSeek.main.event.HideAndSeekTickGamesEvent;
 import net.clicksminuteper.HideAndSeek.main.game.Game;
+import net.clicksminuteper.HideAndSeek.main.game.Game.GameState;
 import net.clicksminuteper.HideAndSeek.main.game.Games;
 import net.clicksminuteper.HideAndSeek.main.game.block.BlockPalette;
 import net.clicksminuteper.HideAndSeek.main.util.SeekLog;
@@ -42,6 +46,7 @@ public class TraitGameController extends Trait {
 	private Game game;
 	private JavaPlugin plugin;
 	private BlockPalette palette;
+	private Inventory inventory;
 
 	public TraitGameController() {
 		super("hns_gamecontroller");
@@ -106,7 +111,8 @@ public class TraitGameController extends Trait {
 	@EventHandler
 	public void click(NPCRightClickEvent event) {
 		if (event.getNPC() == this.getNPC()) {
-			event.getClicker().sendMessage("Oops! Looks like the game mechanics aren't implemented yet! Come back next version!");
+			SeekLog.debug("Clicked GameController (opening inventory on " + event.getClicker() + "): " + this);
+			inventory.openInventory(event.getClicker());
 		}
 
 	}
@@ -114,7 +120,7 @@ public class TraitGameController extends Trait {
 	@EventHandler
 	public void playerDisconnected(PlayerQuitEvent event) {
 		if (game.getPlayers().containsKey(event.getPlayer().getName())) {
-			SeekLog.info("Player " + event.getPlayer().getName() + " disconnected so was removed from the Game at " + getNPC().getEntity().getLocation() + "! Why did they want to play....?");
+			SeekLog.info("Player " + event.getPlayer().getName() + " disconnected so is being removed from the Game at " + getNPC().getEntity().getLocation() + "! Why didn't they want to play....?");
 			game.removePlayer(event.getPlayer().getName());
 			game.teleportPlayerToExternalLobby(event.getPlayer());
 		}
@@ -123,7 +129,33 @@ public class TraitGameController extends Trait {
 	// Called every tick
 	@Override
 	public void run() {
-		SeekLog.debug("Game controller running...");
+		List<Entity> nearbyEntities = getNPC().getEntity().getNearbyEntities(5, 5, 5);
+		getNPC().faceLocation(nearbyEntities.get(0).getLocation());
+	}
+
+	public void prepareInventoryByState(GameState state) {
+		SeekLog.debug("Preparing inventory with GameState " + state);
+		switch (state) {
+		case UNINITIALISED:
+			SeekLog.debug("Preparing inventory " + state);
+			this.inventory = TraitGameControllerInventory.generateUninitialisedInventory(this.inventory);
+			break;
+		case JOINING:
+			SeekLog.debug("Preparing inventory " + state);
+			this.inventory = TraitGameControllerInventory.generateJoiningInventory(this.inventory);
+			break;
+		case PLAYING:
+			SeekLog.debug("Preparing inventory " + state);
+			this.inventory = TraitGameControllerInventory.generatePlayingInventory(this.inventory);
+			break;
+		case FINISHED:
+			SeekLog.debug("Preparing inventory " + state);
+			this.inventory = TraitGameControllerInventory.generateFinishedInventory(this.inventory);
+			break;
+		default:
+			SeekLog.error("Unhandled case whilst preparing inventory : " + state);
+			break;
+		}
 	}
 
 	/**
@@ -133,7 +165,7 @@ public class TraitGameController extends Trait {
 	 */
 	@Override
 	public void onAttach() {
-		plugin.getServer().getLogger().info(npc.getName() + " has been assigned Nitwit!");
+		SeekLog.debug(npc.getName() + " has been assigned TraitGameController!");
 	}
 
 	/**
@@ -155,7 +187,9 @@ public class TraitGameController extends Trait {
 	@Override
 	public void onSpawn() {
 		this.game = new Game(this);
-		SeekLog.info("NPC with TraitGameController has spawned. New Game attached");
+		this.getNPC().addTrait(TraitGameControllerInventory.class);
+		this.inventory = this.getNPC().getTrait(TraitGameControllerInventory.class);
+		SeekLog.info("NPC with TraitGameController has spawned. New Game attached and inventory created.");
 	}
 
 	/**
@@ -163,6 +197,8 @@ public class TraitGameController extends Trait {
 	 */
 	@Override
 	public void onRemove() {
+		game.destroy();
+		this.game = null;
 		SeekLog.info("Game Controller removed");
 	}
 
@@ -171,12 +207,30 @@ public class TraitGameController extends Trait {
 		return "//TODO! New toString() for TraitGameController" + super.toString();
 	}
 
+	// getter
+
 	/**
 	 * @return the palette
 	 */
 	public BlockPalette getPalette() {
 		return palette;
 	}
+
+	/**
+	 * @return
+	 */
+	public Inventory getInventory() {
+		return inventory;
+	}
+
+	/**
+	 * @return the plugin
+	 */
+	public JavaPlugin getPlugin() {
+		return plugin;
+	}
+
+	// setter
 
 	/**
 	 * @param palette the palette to set
@@ -193,16 +247,16 @@ public class TraitGameController extends Trait {
 	}
 
 	/**
-	 * @return the plugin
-	 */
-	public JavaPlugin getPlugin() {
-		return plugin;
-	}
-
-	/**
 	 * @param plugin the plugin to set
 	 */
 	public void setPlugin(JavaPlugin plugin) {
 		this.plugin = plugin;
+	}
+
+	/**
+	 * @param inventory the inventory to set
+	 */
+	public void setInventory(Inventory i) {
+		this.inventory = i;
 	}
 }
