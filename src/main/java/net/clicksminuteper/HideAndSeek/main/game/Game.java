@@ -193,6 +193,8 @@ public class Game {
 
 	private void playing() {
 		SeekLog.error("No playing behavior");
+		
+		
 
 		// Tally up all remaining hiders
 		int hiderTally = 0;
